@@ -1,4 +1,5 @@
 interface VentrataBooking {
+    availability: any;
     id: string;
     uuid: string;
     testMode: boolean;
@@ -15,9 +16,10 @@ interface VentrataBooking {
     utcExpiresAt: string | null;
     utcRedeemedAt: string | null;
     utcNoshowedAt: string | null;
-    utcConfirmedAt: string | null;
+    utcConfirmedAt: string;
     
     // Product information
+    productName: string;
     productId: string;
     optionId: string;
     
@@ -34,6 +36,9 @@ interface VentrataBooking {
     // Additional fields
     notes: string | null;
     deliveryMethods: string[];
+
+    product: VentrataProduct;
+    prodcutId: string;
 }
 
 interface VentrataContact {
@@ -51,6 +56,28 @@ interface VentrataContact {
     notes: string | null;
     allowMarketing: boolean;
     taxId: string | null;
+    
+}
+
+interface VentrataProduct {
+    id: string,
+    internalName: string,
+    reference: string,
+}
+
+interface CleanContact {
+    fullName: string;
+    phoneNumber: string | null;
+    emailAddress: string | null;
+    country: string | null;
+    supplierReference: string;  // Link to booking
+}
+
+interface CleanBooking {
+    productName: string;
+    travelDate: string;        // from availability.localDateTimeStart
+    bookingDate: string;       // from utcConfirmedAt
+    supplierReference: string;  // Link to contact
 }
 
 interface DeliveryOption {
@@ -84,4 +111,4 @@ interface VentrataUnitItem {
     ticket: VoucherOrTicket;
 }
 
-export { VentrataBooking };
+export { VentrataBooking, CleanContact, CleanBooking };

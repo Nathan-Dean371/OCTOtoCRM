@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { VentrataBooking } from '../../types/ventrata';
+import { VentrataAPIError } from '../../utils/errors';
 
 interface BookingFilters {
     resellerReference?: string;
@@ -43,27 +44,47 @@ class VentrataService {
                 throw new Error('At least one filter parameter is required');
             }
 
+            const headers =
+            {
+                ...this.getHeaders(),
+                'Octo-Capabilities': 'octo/booking'
+            }
+
             // Make the API request with our filters as query parameters
             const response = await axios.get(`${this.baseUrl}/bookings`, {
                 headers: this.getHeaders(),
                 params: filters
             });
 
-            console.log('Raw API Response:', JSON.stringify(response.data, null, 2));
-            
-            // The documentation shows bookings are returned as an array
-            return response.data as VentrataBooking[];
+            // Add validation to ensure we received the expected data structure
+            if (!Array.isArray(response.data)) {
+                throw new VentrataAPIError(
+                    500,
+                    'Unexpected response format from Ventrata API',
+                    'INVALID_RESPONSE_FORMAT'
+                );
+            }
+
+            return response.data;
 
         } catch (error) {
-            if (axios.isAxiosError(error)) {
+            if (axios.isAxiosError(error) && error.response) {
                 // Log the specific error information from the API
-                console.error('Ventrata API Error:', {
-                    status: error.response?.status,
-                    statusText: error.response?.statusText,
-                    data: error.response?.data
-                });
+                const errorData = error.response.data;
+                throw new VentrataAPIError(
+                    error.response.status,
+                    errorData.errorMessage || 'An error occurred with the Ventrata API',
+                    errorData.errorCode,
+                    error
+                );
             }
-            throw error;
+            // Handle other types of errors
+            throw new VentrataAPIError(
+                500,
+                'Failed to fetch bookings from Ventrata',
+                'UNKNOWN_ERROR',
+                error
+            );
         }
     }
 }
