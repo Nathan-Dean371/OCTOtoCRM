@@ -21,10 +21,8 @@ export interface ZohoVentrataBooking {
     id?: string;           // Optional as it won't exist for new bookings
     Booking_Ref: string;   // From Ventrata supplierReference
     Name: string;          // Booking Name
-    Contact: {             // Lookup relationship to Contact
-        id: string;        // Zoho Contact ID
-        name?: string;     // Contact's full name (optional)
-    };
+    Contact_Id : string
+    Option: string;        // From Ventrata option.internalName
     Booking_Date: string;  // From Ventrata utcConfirmedAt
     Product: string;       // From Ventrata product.internalName
     Travel_Date: string;   // From Ventrata availability.localDateTimeStart

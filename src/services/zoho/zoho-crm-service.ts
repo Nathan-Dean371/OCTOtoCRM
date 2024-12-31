@@ -97,8 +97,53 @@ class ZohoCRMService {
 
     // Booking Operations
     async createBooking(booking: Omit<ZohoVentrataBooking, 'id'>): Promise<ZohoVentrataBooking> {
-        // Implementation coming soon
-        throw new Error('Not implemented');
+        try {
+            // Log the request URL and data for debugging
+            console.log('Making request to:', `${this.client.defaults.baseURL}/crm/v2/Bookings`);
+            console.log('Request data:', {data: [booking]});
+    
+            const response = await this.client.post('/crm/v2/Bookings', {
+                data: [booking]
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'  // Explicitly set content type
+                }
+            });
+    
+            // Log the response for debugging
+            console.log('Full Zoho Response Details:', JSON.stringify(response.data.data[0].details, null, 2));
+    
+            if (!response.data.data || response.data.data.length === 0) {
+                throw new Error('No data returned from Zoho CRM');
+            }
+    
+            const result = response.data.data[0];
+            if (result.code !== 'SUCCESS') {
+                throw new Error(`Failed to create booking: ${result.message}`);
+            }
+    
+            return {
+                id: result.details.id,
+                ...booking
+            };
+        } catch (error) {
+
+            
+            if (axios.isAxiosError(error)) {
+                console.error('Full error response:', error.response?.data);
+                
+                throw new Error(
+                    `Failed to create contact in Zoho CRM: ${
+                        error.response?.data?.message || 
+                        error.response?.statusText || 
+                        error.message
+                        
+                    }`
+                );
+                
+            }
+            throw error;
+        }
     }
 
     async getBooking(id: string): Promise<ZohoVentrataBooking> {

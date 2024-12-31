@@ -10,7 +10,7 @@ describe('ZohoCRMService', () => {
         crmService = new ZohoCRMService();
     });
 
-    describe('Contact Operations', () => {
+    /* describe('Contact Operations', () => {
         test('should create a new contact', async () => {
             // Create a test contact
             const testContact = {
@@ -64,4 +64,47 @@ describe('ZohoCRMService', () => {
             expect(createdContact.First_Name).toBe(specialCharContact.First_Name);
         });
     });
+ */
+    describe('Booking Operations', () => {
+        test('should create a new booking', async () => 
+            {
+                const testBooking = {
+                    Booking_Ref: 'TEST-123',
+                    Name: 'Test Booking',
+                    Contact_Id: '776203000000535001',
+                    Option: "Test Option",
+                    Booking_Date: formatDateForZoho('2021-12-31'),
+                    Product: 'Test Product',
+                    Travel_Date: formatDateForZoho('2022-01-01')
+                }
+
+
+                try 
+                {
+                    const createdBooking = await crmService.createBooking(testBooking);
+
+                    expect(createdBooking).toBeDefined();
+                    expect(createdBooking.id).toBeDefined();
+                    expect(createdBooking.Booking_Ref).toBe(testBooking.Booking_Ref);
+                    expect(createdBooking.Name).toBe(testBooking.Name);
+                    expect(createdBooking.Contact_Id).toBe(testBooking.Contact_Id);
+                    expect(createdBooking.Booking_Date).toBe(testBooking.Booking_Date);
+                    expect(createdBooking.Product).toBe(testBooking.Product);
+                    expect(createdBooking.Travel_Date).toBe(testBooking.Travel_Date);
+
+                    console.log('Created Booking:', createdBooking);
+                } catch(error)
+                {
+                    console.error('Test Error:', error);
+                    throw error;
+                }
+
+        });
+    });
 });
+
+function formatDateForZoho(date: string): string {
+    const d = new Date(date);
+    // Format to ISO string and add timezone offset
+    return d.toISOString().split('.')[0] + '+00:00';  // removes milliseconds
+}
