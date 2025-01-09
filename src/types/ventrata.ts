@@ -65,10 +65,27 @@ interface VentrataProduct {
     reference: string,
 }
 
+export interface VentrataWebhook {
+    id: string;
+    event: 'booking_update' | 'availability_update';  // Event types from docs
+    url: string;
+    retryOnError: boolean;
+    useContactLanguage: boolean;
+    headers: Record<string, string>;
+    capabilities: string[];
+}
+
+export interface WebhookEvent {
+    webhook: VentrataWebhook;
+    booking?: VentrataBooking;  // Present for booking_update events
+}
+
 interface CleanContact {
     fullName: string;
+    First_Name: string;
+    Last_Name: string;
+    email: string | null;
     phoneNumber: string | null;
-    emailAddress: string | null;
     country: string | null;
     supplierReference: string;  // Link to booking
 }

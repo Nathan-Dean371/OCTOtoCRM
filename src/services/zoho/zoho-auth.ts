@@ -36,6 +36,13 @@ class ZohoAuthService {
 
     private async refreshAccessToken(): Promise<void> {
         try {
+            console.log('Attempting to refresh token with:', {
+                refreshToken: this.refreshToken ? 'exists' : 'missing',
+                clientId: this.clientId ? 'exists' : 'missing',
+                clientSecret: this.clientSecret ? 'exists' : 'missing',
+                accountsUrl: this.accountsUrl
+            });
+    
             const response = await axios.post(`${this.accountsUrl}/oauth/v2/token`, null, {
                 params: {
                     refresh_token: this.refreshToken,
@@ -44,20 +51,26 @@ class ZohoAuthService {
                     grant_type: 'refresh_token'
                 }
             });
-
+    
             this.token = {
                 ...response.data,
-                // Calculate absolute expiry time
                 expires_at: Date.now() + (response.data.expires_in * 1000)
             };
+    
         } catch (error) {
             if (axios.isAxiosError(error)) {
+                console.error('Token refresh error details:', {
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    data: error.response?.data,
+                    url: error.config?.url
+                });
                 throw new Error(`Failed to refresh access token: ${error.response?.data?.error || error.message}`);
             }
             throw error;
         }
     }
-
+    
     async getAccessToken(): Promise<string> {
         if (!this.token || this.isTokenExpired()) {
             await this.refreshAccessToken();

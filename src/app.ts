@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
+import webhookRoutes from './routes/webhook.routes';
 
 // Load environment variables
 dotenv.config();
@@ -10,6 +11,9 @@ const app: Express = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Mount the webhook routes
+app.use('/api/', webhookRoutes);
 
 // Routes will be added here
 // app.use('/api/v1', routes);

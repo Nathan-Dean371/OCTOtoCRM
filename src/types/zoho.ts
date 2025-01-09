@@ -16,20 +16,14 @@ export interface ZohoContact {
     Ventrata_Bookings?: ZohoVentrataBooking[];  // One-to-Many relationship
 }
 
-// Interface for our custom Ventrata Booking object
 export interface ZohoVentrataBooking {
-    id?: string;           // Optional as it won't exist for new bookings
-    Booking_Ref: string;   // From Ventrata supplierReference
-    Name: string;          // Booking Name
-    Contact_Id : string
-    Option: string;        // From Ventrata option.internalName
-    Booking_Date: string;  // From Ventrata utcConfirmedAt
-    Product: string;       // From Ventrata product.internalName
-    Travel_Date: string;   // From Ventrata availability.localDateTimeStart
-    Owner?: {              // System field for record ownership
-        id: string;
-        name?: string;
-    };
+    id?: string;
+    Booking_Ref: string;
+    Name: string;
+    Contact_Id: string | undefined;     // Changed from Contact object to Contact_Id string
+    Booking_Date: string;
+    Product: string;
+    Travel_Date: string;
 }
 
 // Interface for the specific structure Zoho returns when creating/updating records
@@ -37,15 +31,16 @@ export interface ZohoApiResponseData {
     code: string;          // 'SUCCESS' or error code
     details: {
         id: string;
-        // Other potential details...
+        created_time?: string;
+        modified_time?: string;
     };
     message: string;       // 'record added' or error message
     status: string;        // 'success' or 'error'
 }
 
-// Update our API response interface
+// Interface for Zoho API responses
 export interface ZohoApiResponse<T> {
-    data: ZohoApiResponseData[];
+    data: ZohoApiResponseData[];  // Changed from T[] to ZohoApiResponseData[]
     info?: {
         per_page: number;
         count: number;

@@ -26,8 +26,6 @@ class VentrataService {
         }
     }
 
-    
-
     protected getHeaders() {
         return {
             'Authorization': `Bearer ${this.apiKey}`,
@@ -87,6 +85,8 @@ class VentrataService {
             );
         }
     }
+
+    
 }
 
 export default VentrataService;

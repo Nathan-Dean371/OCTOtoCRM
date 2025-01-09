@@ -27,7 +27,7 @@ describe('ventrataBookingCleaner', () => {
         // Check if strings are trimmed
         expect(result.contact.fullName).toBe("John Doe");
         expect(result.contact.phoneNumber).toBe("+1234567890");
-        expect(result.contact.emailAddress).toBe("john@example.com");
+        expect(result.contact.email).toBe("john@example.com");
         expect(result.booking.productName).toBe("Test Tour");
         expect(result.booking.supplierReference).toBe("REF123");
     });

@@ -2,6 +2,12 @@ import { VentrataBooking, CleanContact, CleanBooking } from '../types/ventrata';
 
 export function ventrataBookingCleaner(booking: VentrataBooking): { contact: CleanContact; booking: CleanBooking } 
 {
+     // Split the full name into first and last name
+    const nameParts = booking.contact.fullName.split(' ');
+     const lastName = nameParts.pop() || ''; // Get last word as last name
+     const firstName = nameParts.join(' '); // Rest is first name
+
+
     //Required fields
     // 1. Contact full name
     // 2. Contact phone number or email address
@@ -32,13 +38,15 @@ export function ventrataBookingCleaner(booking: VentrataBooking): { contact: Cle
         throw new Error('Booking supplier reference is required');
     }
 
-    //Clean the booking
-    let cleanContact : CleanContact = {
-        fullName: safeTrim(booking.contact.fullName) ?? '',  // Use empty string if null
-        phoneNumber: safeTrim(booking.contact.phoneNumber),
-        emailAddress: safeTrim(booking.contact.emailAddress),
-        country: safeTrim(booking.contact.country),
-        supplierReference: safeTrim(booking.supplierReference) ?? ''
+    const cleanContact: CleanContact = {
+        fullName: booking.contact.fullName,
+
+        First_Name: firstName,
+        Last_Name: lastName, // Required
+        email: booking.contact.emailAddress,
+        phoneNumber: booking.contact.phoneNumber,
+        country: booking.contact.country,
+        supplierReference: booking.supplierReference
     };
 
     let cleanBooking : CleanBooking = {

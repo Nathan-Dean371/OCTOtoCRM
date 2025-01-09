@@ -10,11 +10,31 @@ describe('ZohoCRMService', () => {
         crmService = new ZohoCRMService();
     });
 
-    /* describe('Contact Operations', () => {
+    test('should find contact by email', async () => {
+        const testEmail = 'test@example.com'; // Use an email you know exists in your CRM
+        
+        const contact = await crmService.findContactByEmail(testEmail);
+        
+        if (contact) {
+            expect(contact.Email).toBe(testEmail);
+            console.log('Found contact:', contact);
+        } else {
+            console.log('No contact found with email:', testEmail);
+        }
+    });
+    
+    test('should handle non-existent email search', async () => {
+        const nonExistentEmail = 'nonexistent' + Date.now() + '@example.com';
+        
+        const contact = await crmService.findContactByEmail(nonExistentEmail);
+        expect(contact).toBeNull();
+    });
+
+    describe('Contact Operations', () => {
         test('should create a new contact', async () => {
             // Create a test contact
             const testContact = {
-                First_Name: 'Test',
+                First_Name: 'Test2',
                 Last_Name: 'User',
                 Email: 'test@example.com',
                 Phone: '+1234567890',
@@ -64,14 +84,14 @@ describe('ZohoCRMService', () => {
             expect(createdContact.First_Name).toBe(specialCharContact.First_Name);
         });
     });
- */
+
     describe('Booking Operations', () => {
         test('should create a new booking', async () => 
             {
                 const testBooking = {
-                    Booking_Ref: 'TEST-123',
+                    Booking_Ref: `TEST-${Date.now()}`,
                     Name: 'Test Booking',
-                    Contact_Id: '776203000000535001',
+                    Contact_Id: '',
                     Option: "Test Option",
                     Booking_Date: formatDateForZoho('2021-12-31'),
                     Product: 'Test Product',
