@@ -4,7 +4,17 @@ import { errorHandler } from './middleware/errorHandler';
 import webhookRoutes from './routes/webhook.routes';
 
 // Load environment variables
-dotenv.config();
+const result = dotenv.config();
+if(result.error) {
+  console.error(result.error);
+}
+console.log('Loaded environment variables:', {
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  ZOHO_DOMAIN: process.env.ZOHO_DOMAIN ? 'Set' : 'Not Set',
+  // Add other variables you want to check
+});
+
 
 const app: Express = express();
 
