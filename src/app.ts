@@ -2,6 +2,8 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import webhookRoutes from './routes/webhook.routes';
+import apiKeyRoute from './routes/api-key.routes';
+import { authMiddleware } from './middleware/auth';
 
 // Load environment variables
 const result = dotenv.config();
@@ -22,8 +24,14 @@ const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Apply auth middleware to all API routes
+app.use('/api', authMiddleware);
+
 //Mount the webhook routes
 app.use('/api/', webhookRoutes);
+
+// Mount the API key check route
+app.use('/api/', apiKeyRoute)
 
 // Routes will be added here
 // app.use('/api/v1', routes);

@@ -15,6 +15,10 @@ class VentrataWebhookHandler {
      */
     async handleWebhook(event: WebhookEvent): Promise<void> {
         try {
+
+            //API key check
+
+
             console.log('Received webhook event:', {
                 type: event.webhook.event,
                 bookingStatus: event.booking?.status
@@ -59,8 +63,11 @@ class VentrataWebhookHandler {
 
         // Step 3: Create the booking record in Zoho
         const bookingData = this.extractBookingData(booking);
+
+        const bookingName = booking.utcConfirmedAt + " - " +  bookingData.productName;
+
         const zohoBooking = await this.zohoService.createBooking({
-            Name: bookingData.productName,
+            Name: bookingName,
             Booking_Ref: booking.uuid,
             Contact_Id: zohoContact.id,  // Link to the contact
             Booking_Date: booking.utcConfirmedAt,
