@@ -46,6 +46,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
   });
+
+app.get("/", (req: Request, res: Response) => {
+  //Serve home page
+  res.sendFile('pages/index.html', { root: __dirname });
+});
   
 
 export default app;
