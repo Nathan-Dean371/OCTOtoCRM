@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/errorHandler';
 import webhookRoutes from './routes/webhook.routes';
 import apiKeyRoute from './routes/api-key.routes';
 import { authMiddleware } from './middleware/auth';
+import { PrismaClient } from '@prisma/client';
 
 // Load environment variables
 const result = dotenv.config();
@@ -51,6 +52,23 @@ app.get("/", (req: Request, res: Response) => {
   //Serve home page
   res.sendFile('pages/index.html', { root: __dirname });
 });
-  
+
+
+  app.get("/test-connection", async (req: Request, res: Response) => {
+    const prisma = new PrismaClient();
+    try {
+      await prisma.$connect();
+      console.log('Successfully connected to database');
+      const result = await prisma.$queryRaw`select * from companies;`;
+      console.log(result);
+      res.status(200).json({ result});
+    } catch (error) {
+      console.error('Failed to connect to database:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      res.status(500).json({ success: false, error: errorMessage });
+    } finally {
+      await prisma.$disconnect();
+    }
+  });
 
 export default app;
