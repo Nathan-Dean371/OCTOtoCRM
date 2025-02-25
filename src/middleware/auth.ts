@@ -51,7 +51,5 @@ export const validateApiKey = (req: Request, res: Response, next: NextFunction) 
     }
 };
 
-
-
 // Combine multiple middleware functions
 export const authMiddleware = [validateApiKey];

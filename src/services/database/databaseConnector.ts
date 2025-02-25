@@ -23,4 +23,27 @@ export async function connectToDatabase()
     }
 }
 
+export async function getUserDetails(email : string)
+{
+    try 
+    {
+
+        const user = await prismaClientInstance.users.findFirst({
+            where: {
+                email: email,
+            },
+        });
+        return user;
+    } 
+    catch (error) 
+    {
+        console.error('Failed to get user details:', error);
+        return null;
+    } 
+    finally 
+    {
+        await prismaClientInstance.$disconnect();
+    }
+}
+
 export default prismaClientInstance;

@@ -13,6 +13,7 @@ const checkAPIkey: RequestHandler = async (req, res, next): Promise<void> => {
                 success: false,
                 message: 'API key is required'
             });
+            
             return;
         }
         const configuredApiKey = process.env.WEBHOOK_API_KEY;

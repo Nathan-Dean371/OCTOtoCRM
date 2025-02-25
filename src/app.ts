@@ -30,6 +30,10 @@ app.use('/api/', apiKeyRoute)
 // Routes will be added here
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
+app.post('/logout', (req: Request, res: Response) => {
+  res.clearCookie('auth-token');
+  res.redirect('/');
+});
 
 // Basic error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -44,7 +48,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.get("/", (req: Request, res: Response) => {
   //Serve home page
-  res.render('index', { title: 'Home' });
+  res.render('index', { title: 'Home' , user : null});
 });
 
 export default app;

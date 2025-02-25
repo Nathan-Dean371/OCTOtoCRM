@@ -19,10 +19,16 @@
                 border: none; cursor: pointer; }
         button:hover { background-color: #45a049; }
         #testLogin { margin-top: 20px; padding: 1rem; background-color: antiquewhite; }
-
+        a{ text-decoration: none; }
         label {
         padding: 12px 12px 12px 0;
         display: inline-block;
+        }
+
+        .flex
+        {
+            display: flex;
+            justify-content: flex-start;
         }
 
         .col-25 {
@@ -71,7 +77,7 @@
         resize: vertical;
         }
 
-        </style>
+    </style>
 </head>
 <body>
     <div class="container">
@@ -123,6 +129,33 @@
             </div>
         </div>
         
+
+        <div id="testAuthTokens">
+            <div class="flex">
+                <h1>Logged in: </h1>
+                    <% if (user) { %>
+                    <h1>True</h1>
+                    <% } else { %>
+                    <h1>False</h1>
+                    <% } %>
+            </div>
+            
+            <% if (user) { %>
+                <p> <%= user.email %> </p>
+                <p> <%= user.first_name %> </p>
+                <p> <%= user.last_name %> </p>
+
+                <form action="/logout" method="POST">
+                    <button >Logout</button>
+                </form>
+                
+            <% } else { %>
+                <p> Not logged in </p>
+            <% } %>
+        </div>
+
+
+
         <script>
             document.getElementById('testButton').addEventListener('click', async () => {
                 // Show loading indicator

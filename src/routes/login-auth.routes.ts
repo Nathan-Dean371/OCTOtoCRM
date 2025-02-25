@@ -1,8 +1,9 @@
 import { Router, RequestHandler } from "express";
 import { checkLoginDetails } from '../utils/userAuth';  
 import { createJWTtoken } from '../utils/JWT-generator';
+import { getUserDetails } from '../services/database/databaseConnector';
 
-import jwt from 'jsonwebtoken';
+
 
 const router = Router();
 
@@ -26,11 +27,16 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
             // Generate a JWT token and send it back to the user
             const token = createJWTtoken(email);
             
-            res.json({
-            success: true,
-            message: "Login successful",
-        });
-        return;
+            
+
+            //Get user details to send to the front end
+            const user = await getUserDetails(email);
+            console.log(user);
+            
+            res.cookie('auth-token', token, { httpOnly: true });
+            res.render('index', { user: user });
+            
+            return;
         } else {
             res.status(401).json({
             success: false,
