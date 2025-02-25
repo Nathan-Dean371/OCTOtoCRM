@@ -3,11 +3,14 @@ import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import webhookRoutes from './routes/webhook.routes';
 import apiKeyRoute from './routes/api-key.routes';
+import loginRoute from './routes/login-auth.routes';
 import { authMiddleware } from './middleware/auth';
-import { PrismaClient } from '@prisma/client';
+
+import { connectToDatabase } from './services/database/databaseConnector';
 
 // Load environment variables
 const result = dotenv.config();
+
 if(result.error) {
   console.error(result.error);
 }
@@ -18,15 +21,19 @@ console.log('Loaded environment variables:', {
   // Add other variables you want to check
 });
 
-
 const app: Express = express();
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.set('views', 'src/views');
 
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
+
+//Connect to postgres database
+connectToDatabase();
 
 //Mount the webhook routes
 app.use('/api/', webhookRoutes);
@@ -36,6 +43,7 @@ app.use('/api/', apiKeyRoute)
 
 // Routes will be added here
 // app.use('/api/v1', routes);
+app.use('/', loginRoute);
 
 // Basic error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -50,25 +58,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.get("/", (req: Request, res: Response) => {
   //Serve home page
-  res.sendFile('pages/index.html', { root: __dirname });
+  res.render('index', { title: 'Home' });
 });
-
-
-  app.get("/test-connection", async (req: Request, res: Response) => {
-    const prisma = new PrismaClient();
-    try {
-      await prisma.$connect();
-      console.log('Successfully connected to database');
-      const result = await prisma.$queryRaw`select * from companies;`;
-      console.log(result);
-      res.status(200).json({ result});
-    } catch (error) {
-      console.error('Failed to connect to database:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      res.status(500).json({ success: false, error: errorMessage });
-    } finally {
-      await prisma.$disconnect();
-    }
-  });
 
 export default app;

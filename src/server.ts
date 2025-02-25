@@ -31,6 +31,8 @@ console.log('Environment variables status:', {
     ZOHO_REFRESH_TOKEN: process.env.ZOHO_REFRESH_TOKEN ? 'Set' : 'Not Set',
 });
 
+
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);

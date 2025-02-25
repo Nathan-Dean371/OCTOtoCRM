@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Connection Test</title>
+    <style>
+        * {
+        box-sizing: border-box;
+        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .success { color: green; }
+        .error { color: red; }
+        .loading { display: none; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .status-container { margin-top: 20px; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; 
+                border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        #testLogin { margin-top: 20px; padding: 1rem; background-color: antiquewhite; }
+
+        label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+        }
+
+        .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 6px;
+        }
+
+        .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+        }
+
+        input[type=submit] {
+        background-color: #04AA6D;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        }
+
+        /* Clear floats after the columns */
+        .row::after {
+        content: "";
+        display: table;
+        clear: both;
+
+        }
+
+        .login-container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        }
+
+
+        input[type=text], input[type=password], select, textarea {
+            width: 100%;
+        max-width: 100%;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+        }
+
+        </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Connection Test</h1>
+        
+        <button id="testButton">Test Database Connection</button>
+        <div class="loading" id="loadingIndicator">Testing connection...</div>
+        
+        <div class="status-container" id="statusContainer">
+            <!-- Status will be displayed here -->
+        </div>
+        
+        <div id="resultContainer">
+            <!-- Results will be displayed here -->
+        </div>
+
+        <div id="testLogin">
+            <h1>Login</h1>
+            <div class="login-container">
+                <form action="/login" method="POST">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="email" >Email:</label>
+                        </div>
+
+                        <div class="col-75">
+                            <input type="text" id="email" name="email"  required>
+                        </div>
+                    </div>
+                    
+                    <br>
+
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="password" >Password:</label>
+                        </div>
+
+                        <div class="col-75">
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                    
+                    <br>
+                    <div class="row">
+                        <button type="submit">Login</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <script>
+            document.getElementById('testButton').addEventListener('click', async () => {
+                // Show loading indicator
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('statusContainer').innerHTML = '';
+                document.getElementById('resultContainer').innerHTML = '';
+                
+                try {
+                    const response = await fetch('/test-connection');
+                    const data = await response.json();
+                    
+                    // Hide loading indicator
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    
+                    if (response.ok) {
+                        // Success
+                        document.getElementById('statusContainer').innerHTML = 
+                            `<div class="success">✅ Successfully connected to database at ${new Date().toLocaleString()}</div>`;
+                        
+                        // Display the results in a table
+                        if (data.result && data.result.length > 0) {
+                            let tableHtml = '<h2>Company Records</h2><table><thead><tr>';
+                            
+                            // Create table headers from the first record's keys
+                            const headers = Object.keys(data.result[0]);
+                            headers.forEach(header => {
+                                tableHtml += `<th>${header}</th>`;
+                            });
+                            
+                            tableHtml += '</tr></thead><tbody>';
+                            
+                            // Add rows for each record
+                            data.result.forEach(record => {
+                                tableHtml += '<tr>';
+                                headers.forEach(header => {
+                                    let cellValue = record[header];
+                                    // Format dates nicely if they look like dates
+                                    if (cellValue && typeof cellValue === 'string' && 
+                                        cellValue.includes('T') && cellValue.includes('Z')) {
+                                        try {
+                                            cellValue = new Date(cellValue).toLocaleString();
+                                        } catch (e) {
+                                            // If it's not actually a date, keep original
+                                        }
+                                    }
+                                    tableHtml += `<td>${cellValue || ''}</td>`;
+                                });
+                                tableHtml += '</tr>';
+                            });
+                            
+                            tableHtml += '</tbody></table>';
+                            document.getElementById('resultContainer').innerHTML = tableHtml;
+                        } else {
+                            document.getElementById('resultContainer').innerHTML = 
+                                '<p>No records found in the companies table.</p>';
+                        }
+                    } else {
+                        // Error
+                        document.getElementById('statusContainer').innerHTML = 
+                            `<div class="error">❌ Failed to connect to database: ${data.error}</div>`;
+                    }
+                } catch (error) {
+                    // Hide loading indicator
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    
+                    // Connection or JavaScript error
+                    document.getElementById('statusContainer').innerHTML = 
+                        `<div class="error">❌ Error: ${error.message}</div>`;
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
