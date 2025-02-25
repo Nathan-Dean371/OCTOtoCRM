@@ -1,5 +1,8 @@
 import { Router, RequestHandler } from "express";
 import { checkLoginDetails } from '../utils/userAuth';  
+import { createJWTtoken } from '../utils/JWT-generator';
+
+import jwt from 'jsonwebtoken';
 
 const router = Router();
 
@@ -18,8 +21,11 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
     try 
     {
         const isValid = await checkLoginDetails({ email, password });
-
-        if (isValid) {
+        if (isValid) 
+        {
+            // Generate a JWT token and send it back to the user
+            const token = createJWTtoken(email);
+            
             res.json({
             success: true,
             message: "Login successful",
