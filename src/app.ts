@@ -1,12 +1,10 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
-import { errorHandler } from './middleware/errorHandler';
 import webhookRoutes from './routes/webhook.routes';
 import apiKeyRoute from './routes/api-key.routes';
 import loginRoute from './routes/login-auth.routes';
 import { authMiddleware } from './middleware/auth';
-
 import { connectToDatabase } from './services/database/databaseConnector';
+import path from 'path';
 
 const app: Express = express();
 // Middleware
@@ -14,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
@@ -30,6 +29,7 @@ app.use('/api/', apiKeyRoute)
 // Routes will be added here
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
+
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');
   res.redirect('/');
