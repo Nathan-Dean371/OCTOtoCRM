@@ -26,14 +26,10 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
         {
             // Generate a JWT token and send it back to the user
             const token = createJWTtoken(email);
-            
-            
 
-            //Get user details to send to the front end
-            
-            
             res.cookie('auth-token', token, { httpOnly: true });
-            res.redirect('/');
+            //Redirect to page depending on user role
+            res.redirect('/admin/dashboard');
             
             return;
         } else {

@@ -7,6 +7,8 @@ import { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
 import { userAuthMiddleware } from './middleware/user-auth';
 import cookieParser from 'cookie-parser';
+import { verifyRole } from './middleware/roleVerificationMiddleware';
+import { userRole } from './types/userRoles';
 
 const app: Express = express();
 // Middleware
@@ -19,6 +21,7 @@ app.use(cookieParser());
 
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
+// Apply role checking middlewate to all API routes
 
 //Connect to postgres database
 connectToDatabase();
@@ -32,6 +35,11 @@ app.use('/api/', apiKeyRoute)
 // Routes will be added here
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
+
+//Admin routes
+app.get('/admin/dashboard', userAuthMiddleware, verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+  res.render('admin', { title: 'Admin Dashboard', user: req.user });
+});
 
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');

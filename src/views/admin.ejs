@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Database Connection Test</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
     <div class="">
         <div class="navbar">
             <a href="/"><h1>OCTOtoCRM</h1></a>
+            <h2>Admin Dashboard</h2>
             <% if (!user) { %>
             <div class="loginNavItem">    
                 <div class="login-container">
@@ -36,8 +37,7 @@
                                 </div>
 
 
-                                
-
+                            
                                 <div>
                                     <button type="submit">Login</button>
                                 </div>
@@ -46,8 +46,9 @@
             <% } else { %>
             <div class="loggedInInfo">
                 <p><h1>Logged in as </h1> <%= user.email %> </p>
+
                 <% if (user.role === 'admin') { %>
-                    <a href="/admin/dashboard"><h2>Admin Dashboard</h2></a>
+                <a href="/admin/dashboard"><h2>Admin Dashboard</h2></a>
                 <% } %>
             </div>
             <div class="loginNavItem">    
