@@ -8,7 +8,6 @@
     <div class="">
         <div class="navbar">
             <a href="/"><h1>OCTOtoCRM</h1></a>
-            <h2>Admin Dashboard</h2>
             <% if (!user) { %>
             <div class="loginNavItem">    
                 <div class="login-container">
@@ -35,9 +34,6 @@
                                         <br>
                                     </div>
                                 </div>
-
-
-                            
                                 <div>
                                     <button type="submit">Login</button>
                                 </div>
@@ -58,6 +54,30 @@
             <% } %>
             </div>
         </div>
+    
+    
+    
     </div>
+
+    <main>  
+        <div class="adminDashboard">
+            <h1>Admin Dashboard</h1>
+            
+            <div id="adminDashboardCardContainer">
+                <div id="companiesCard">
+                    <h2>Companies</h2>
+
+                    <button>Invite Company</button>
+                    <button>View Companies</button>
+                </div>
+
+                <div id="bookingsCard">
+                    <h2>Bookings Processed</h2>
+
+                    <button>View Bookings</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

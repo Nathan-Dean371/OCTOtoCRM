@@ -10,11 +10,13 @@ export const verifyRole = (roles : userRole[]) => (req: Request, res: Response, 
         // Check if user exists
         if (!user) 
         {
+            res.redirect('/');
             throw new AppError(401, 'Unauthorized');
         }
         // Check if user has the required role
         if (!roles.includes(user.role))
         {
+            res.redirect('/');
             throw new AppError(403, 'Forbidden');
         }
 

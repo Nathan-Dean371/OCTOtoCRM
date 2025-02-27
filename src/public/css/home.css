@@ -100,3 +100,23 @@
         text-decoration: none;
         color: black;
     }
+
+    #companiesCard
+    {
+        background-color: rgb(40, 176, 180);
+        padding: 1rem;
+    }
+
+    #adminDashboardCardContainer
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #bookingsCard
+    {
+        background-color: rgb(14, 153, 21);
+        padding: 1rem;
+    }
