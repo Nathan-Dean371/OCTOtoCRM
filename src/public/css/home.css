@@ -1,7 +1,8 @@
 * {
     box-sizing: border-box;
+    margin: 0;
     }
-    body { font-family: Arial, sans-serif; margin: 20px; }
+    body { font-family: Arial, sans-serif; }
     .container { max-width: 800px; margin: 0 auto; }
     .success { color: green; }
     .error { color: red; }
@@ -16,8 +17,8 @@
     #testLogin { margin-top: 20px; padding: 1rem; background-color: antiquewhite; }
     a{ text-decoration: none; }
     label {
-    padding: 12px 12px 12px 0;
-    display: inline-block;
+   
+    
     }
 
     .flex
@@ -26,17 +27,7 @@
         justify-content: flex-start;
     }
 
-    .col-25 {
-    float: left;
-    width: 25%;
-    margin-top: 6px;
-    }
-
-    .col-75 {
-    float: left;
-    width: 75%;
-    margin-top: 6px;
-    }
+    
 
     input[type=submit] {
     color: white;
@@ -47,26 +38,59 @@
     float: right;
     }
 
-    /* Clear floats after the columns */
-    .row::after {
-    content: "";
-    display: table;
-    clear: both;
+    .row
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
+        padding: .3rem;
+
+        width: 100%;
     }
+
+    .column
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        align-items: flex-start;
+    }
+
 
     .login-container {
     border-radius: 5px;
     background-color: #f2f2f2;
-    padding: 20px;
+   
     }
 
 
     input[type=text], input[type=password], select, textarea {
+        
         width: 100%;
-    max-width: 100%;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
+        
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+    }
+
+
+
+    .navbar
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        background-color: aqua;
+        padding : .5rem 1rem;
+    }
+
+    form
+    {
+        display: flex;
+        align-items: center;
+        padding: .2rem;
     }

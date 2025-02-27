@@ -30,11 +30,10 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
             
 
             //Get user details to send to the front end
-            const user = await getUserDetails(email);
-            console.log(user);
+            
             
             res.cookie('auth-token', token, { httpOnly: true });
-            res.render('index', { user: user });
+            res.redirect('/');
             
             return;
         } else {

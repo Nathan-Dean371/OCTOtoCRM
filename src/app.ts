@@ -5,6 +5,8 @@ import loginRoute from './routes/login-auth.routes';
 import { authMiddleware } from './middleware/auth';
 import { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
+import { userAuthMiddleware } from './middleware/user-auth';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
 // Middleware
@@ -13,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
@@ -46,9 +49,11 @@ app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
   });
 
-app.get("/", (req: Request, res: Response) => {
+
+app.get("/", userAuthMiddleware, (req: Request, res: Response) => {
   //Serve home page
-  res.render('index', { title: 'Home' , user : null});
+  const user = req.user;
+  res.render('index', { title: 'Home' , user : user});
 });
 
 export default app;
