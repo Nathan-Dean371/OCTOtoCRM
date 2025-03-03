@@ -36,10 +36,17 @@ app.use('/api/', apiKeyRoute)
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
 
-//Admin routes
+//#region Admin routes
 app.get('/admin/dashboard', userAuthMiddleware, verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
   res.render('admin', { title: 'Admin Dashboard', user: req.user });
 });
+
+app.get('/admin/invite/company', userAuthMiddleware, verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+  res.render('invite-company', { title: 'Invite Company', user: req.user });  
+});
+//#endregion
+
+
 
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');
