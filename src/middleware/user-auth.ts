@@ -16,14 +16,14 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
             next();
             return;
         }
-
+        
         const decode = await <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
+        
         console.log('Decoded JWT: ', decode);
         console.log(decode.user);
 
         const userFromDb  = await getUserDetails(decode.user);
         console.log('User from db: ', userFromDb);
-
 
         var loggedInUser : user; 
         if(userFromDb)
@@ -46,7 +46,14 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
     }
     catch(error) 
     {
-        console.log(error);
+        if(error instanceof jwt.TokenExpiredError)
+        {   
+            console.log('Token expired');
+            
+        }
+
+        console.log("Token error: " + error); 
+        
         
     }
 };

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Connection Test</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <h1>View Companies</h1>
+
+    <div class="viewCompaniesContainer">
+        <table class="viewCompaniesTable">
+            <tr>
+                <th>Company Name</th>
+                <th>Company Website</th>
+                <th>Primary Contact Email</th>
+                <th>Primary Contact Phone No.</th>
+                <th>Actions</th>
+            </tr>
+            <% companies.forEach(function(company) { %>
+                <tr>
+                    <td><%= company.name %></td>
+                    <td><%= company.website %></td>
+                    <td><%= company.primary_contact_email %></td>
+                    <td><%= company.primary_contact_phone %></td>
+                    
+                    <td>
+                        <a href="/admin/companies/<%= company.id %>/edit">Edit</a>
+                        <a href="/admin/companies/users/view"><button>View Users</button></a>
+                        <form action="/admin/companies/<%= company.id %>?_method=DELETE" method="POST">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </table>
+</body>
+</html>

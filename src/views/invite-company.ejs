@@ -15,18 +15,24 @@
     </div>
 
     <div class="inviteCompanyContainer">
-        <form class="inviteCompanyForm" action="/invite-company" method="post">
+        <form class="inviteCompanyForm" action="/admin/company/invite" method="post">
             <label for="companyName">Company Name:</label>
             <input type="text" id="companyName" name="companyName" required><br><br>
 
             <label for="companyWebsite">Company Website:</label>    
             <input type="text" id="companyWebsite" name="companyWebsite"><br><br>
 
-            <label for="companyEmail">Company Email:</label>
-            <input type="email" id="companyEmail" name="companyEmail" required><br><br>
+            <label for="primaryContactEmail">Primary Contact Email:</label>
+            <input type="email" id="primaryContactEmail" name="primaryContactEmail" required><br><br>
 
-            <label for="companyPhone">Company Phone:</label>
+            <label for="companyPhone">Primary Contact Phone No.:</label>
             <input type="tel" id="companyPhone" name="companyPhone"><br><br>
+
+            <label for="primaryContactFirstName">First Name:</label>  
+            <input type="text" id="primaryContactFirstName" name="primaryContactFirstName" required><br><br>
+
+            <label for="primaryContactLastName">Last Name:</label>
+            <input type="text" id="primaryContactLastName" name="primaryContactLastName" required><br><br>
 
             <button type="submit">Invite Company</button>
         </form>

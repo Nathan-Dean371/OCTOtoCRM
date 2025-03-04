@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -9,13 +10,13 @@ datasource db {
 
 model companies {
   id                    String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                  String             @db.VarChar(80)
+  name                  String             @unique(map: "Unique Company Name") @db.VarChar(80)
   website               String?            @db.VarChar(255)
   primary_contact_email String             @db.VarChar(255)
   primary_contact_phone String?            @db.VarChar(20)
-  status                String             @db.VarChar(20)
   created_at            DateTime           @default(now()) @db.Timestamptz(6)
   updated_at            DateTime           @default(now()) @db.Timestamptz(6)
+  company_status        company_status
   user_invitations      user_invitations[]
   users                 users[]
 }
@@ -51,10 +52,10 @@ model users {
   role                                                         user_role
   is_active                                                    Boolean
   email_verified                                               Boolean
-  last_login                                                   DateTime           @db.Timestamptz(6)
+  last_login                                                   DateTime           @default(now()) @db.Timestamptz(6)
   failed_login_attempts                                        Int                @default(0)
   password_reset_token                                         String             @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  password_reset_expires                                       DateTime           @db.Timestamptz(6)
+  password_reset_expires                                       DateTime?          @default(now()) @db.Timestamptz(6)
   created_at                                                   DateTime           @default(now()) @db.Timestamptz(6)
   updated_at                                                   DateTime           @default(now()) @db.Timestamptz(6)
   user_invitations_user_invitations_accepted_by_user_idTousers user_invitations[] @relation("user_invitations_accepted_by_user_idTousers")
@@ -74,4 +75,10 @@ enum user_role {
   MANAGER
   OPERATOR
   VIEWER
+}
+
+enum company_status {
+  INVITED
+  ACTIVE
+  INACTIVE
 }
