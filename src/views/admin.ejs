@@ -14,23 +14,34 @@
             <h1>Admin Dashboard</h1>
             
             <div id="adminDashboardCardContainer">
-                <div id="companiesCard">
-                    <h2>Companies</h2>
-
-                    <a href="invite/company"><button>Invite Company</button></a>
-                    <a href="dashboard/companies"><button>View Companies</button></a>
+                <div class="flex-row" id="row1">
+                    <div id="companiesCard">
+                        <h2>Companies</h2>
+    
+                        <a href="invite/company"><button>Invite Company</button></a>
+                        <a href="dashboard/companies"><button>View Companies</button></a>
+                    </div>
+    
+                    <div id="usersCard">
+                        <h2>Users</h2>
+                        <a href="invite/user"><button>Invite User</button></a>
+                        <a href="dashboard/users"><button>View Users</button></a>
+                        <a href="dashboard/user/invites"><button>View Users invites</button></a>
+                    </div>
+    
+                    <div id="bookingsCard">
+                        <h2>Bookings Processed</h2>
+    
+                        <button>View Bookings</button>
+                    </div>
                 </div>
-
-                <div id="usersCard">
-                    <h2>Users</h2>
-                    <a href="invite/user"><button>Invite User</button></a>
-                    <a href="dashboard/users"><button>View Users</button></a>
-                </div>
-
-                <div id="bookingsCard">
-                    <h2>Bookings Processed</h2>
-
-                    <button>View Bookings</button>
+                
+                <div class="flex-row" id="row2">
+                    <div id="tunnelsCard">
+                        <h2>Tunnels</h2>
+    
+                        <a href="dashboard/tunnels"><button>View Tunnels</button></a>
+                    </div>  
                 </div>
             </div>
         </div>

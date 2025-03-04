@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View User Invites</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <h1>View User-Invites</h1>
+
+    <div class="viewUsersContainer">
+        <table class="viewUsersTable">
+            <tr>
+                <th>Company</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+            <% invites.forEach(function(invite) { %>
+                <tr>
+                    <td><%= companyDictionary.get(invite.company_id) %></td>
+                    <td><%= invite.first_name %></td>
+                    <td><%= invite.last_name %></td>
+                    <td><%= invite.email %></td>
+                    <td><%= invite.status %></td>
+                </tr>
+                <% console.log(invite); %>
+            <% }); %>
+        </table>
+</body>
+</html>

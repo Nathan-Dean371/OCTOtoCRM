@@ -104,7 +104,6 @@ app.get('/admin/invite/company/success' , (req: Request, res: Response) =>
     }
   
 });
-
 app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
   //Need a dictionary of companies to populate the dropdown
   // Key is the company id, value is the company name
@@ -120,7 +119,6 @@ app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: 
   });
   
 });
-
 app.get('/admin/dashboard/users', verifyRole([userRole.ADMIN]), async (req: Request, res: Response) => {
   //Get all users with company name using a join
 
@@ -133,6 +131,23 @@ app.get('/admin/dashboard/users', verifyRole([userRole.ADMIN]), async (req: Requ
   });
 });
 
+app.get('/admin/dashboard/user/invites', verifyRole([userRole.ADMIN]), async (req: Request, res: Response) => {
+
+  let companyDictionary : Map<string, string> = new Map<string, string>();
+  const companies = prismaClientInstance.companies.findMany().then((companies) => {
+    companies.forEach((company) => 
+      {
+        companyDictionary.set(company.id, company.name);
+        
+      });
+    });
+  prismaClientInstance.user_invitations.findMany().then((invites) => {
+    res.render('admin-user-invites', { title: 'Admin User Invites', user: req.user, invites, companyDictionary });
+  }).catch((error) => {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  });
+});
 //#endregion
 
 app.post('/logout', (req: Request, res: Response) => {
