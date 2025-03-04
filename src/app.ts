@@ -3,6 +3,7 @@ import webhookRoutes from './routes/webhook.routes';
 import apiKeyRoute from './routes/api-key.routes';
 import loginRoute from './routes/login-auth.routes';
 import companyRoute from './routes/inviteCompany.routes';
+import inviteUserRoute from './routes/inviteUser.routes';
 import { authMiddleware } from './middleware/auth';
 import prismaClientInstance, { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
@@ -67,7 +68,7 @@ app.use('/api/', apiKeyRoute)
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
 app.use('/', companyRoute);
-
+app.use('/', inviteUserRoute);
 //#region Admin routes
 app.get('/admin/dashboard', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
   res.render('admin', { title: 'Admin Dashboard', user: req.user });
@@ -101,6 +102,22 @@ app.get('/admin/invite/company/success' , (req: Request, res: Response) =>
       req.session.invitedManager = undefined;
       
     }
+  
+});
+
+app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+  //Need a dictionary of companies to populate the dropdown
+  // Key is the company id, value is the company name
+   //Create dictionary
+  let companyDictionary : Map<string, string> = new Map<string, string>();
+  const companies = prismaClientInstance.companies.findMany().then((companies) => {
+    companies.forEach((company) => 
+      {
+        companyDictionary.set(company.id, company.name);
+      });
+      
+    res.render('invite-user', { title: 'Invite User', user: req.user, companyDictionary});
+  });
   
 });
 

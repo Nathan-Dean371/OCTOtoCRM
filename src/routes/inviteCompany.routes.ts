@@ -47,8 +47,8 @@ const tryInviteCompany : RequestHandler
                         first_name : req.body.primaryContactFirstName,
                         last_name : req.body.primaryContactLastName
                     }   
-                    let userCreation = await prismaClientInstance.user_invitations.create({data : userInvitationDBinput})
-                    if (userCreation === null) throw new Error('User invitation creation failed');
+                    let userInviteCreation = await prismaClientInstance.user_invitations.create({data : userInvitationDBinput})
+                    if (userInviteCreation === null) throw new Error('User invitation creation failed');
                     
                     if(req.session)
                     {

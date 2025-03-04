@@ -17,8 +17,7 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
             return;
         }
         
-        const decode = await <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
-        
+        const decode = <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
         console.log('Decoded JWT: ', decode);
         console.log(decode.user);
 
@@ -43,18 +42,18 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
         }
 
         next();
-    }
-    catch(error) 
+    } catch(error) 
     {
         if(error instanceof jwt.TokenExpiredError)
-        {   
+        { 
             console.log('Token expired');
-            
+            res.clearCookie('auth-token');
+            res.redirect('/');
         }
-
-        console.log("Token error: " + error); 
-        
-        
+        else
+        {
+            console.log('Unhandeled error: ', error);
+        }
     }
 };
 
