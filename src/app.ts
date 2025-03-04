@@ -26,6 +26,11 @@ declare module "express-session"
       firstName : string,
       lastName : string
     }
+    invitedUser : {
+      email : string,
+      firstName : string,
+      lastName : string
+    }
   }
 }
 
@@ -47,7 +52,6 @@ app.set('view engine', 'ejs');
 app.set('views', 'src/views');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-
 
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
@@ -104,6 +108,22 @@ app.get('/admin/invite/company/success' , (req: Request, res: Response) =>
     }
   
 });
+
+app.get('/admin/invite/user/success' , (req: Request, res: Response) =>
+{
+
+  if(req.session.invitedUser)
+  {
+    let invitedUser = req.session.invitedUser;
+    console.log("Clearing session data");
+    res.render('invite-user-success', { title: 'Invite User Success', user: req.user, invitedUser});
+    //Clear the session data
+    console.log("Clearing session data");
+    req.session.invitedUser = undefined;
+  }
+});
+
+
 app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
   //Need a dictionary of companies to populate the dropdown
   // Key is the company id, value is the company name

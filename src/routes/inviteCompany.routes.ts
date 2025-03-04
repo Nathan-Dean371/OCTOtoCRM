@@ -62,7 +62,7 @@ const tryInviteCompany : RequestHandler
                         }
                     }
                     
-
+                    
                     res.redirect('/admin/invite/company/success');
                 });
         }

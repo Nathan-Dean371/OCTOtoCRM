@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Invite Success!</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <main>  
+        <div class="adminDashboard">
+            <h1>User Invite Success</h1>
+    
+            <h2>User Invited</h2>
+
+            <h3>Name: </h3>
+            <h4><%= invitedUser.firstName %></h4>
+            <h3>Last Name: </h3>
+            <h4><%= invitedUser.lastName %></h4>
+            <h3>Email: </h3>
+            <h4><%= invitedUser.email %></h4>
+        </div>
+    </main>
+</body>
+</html>

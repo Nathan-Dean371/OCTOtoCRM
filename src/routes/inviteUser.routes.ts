@@ -29,6 +29,14 @@ const tryInviteUser : RequestHandler = async ( req : Request, res : Response) =>
             if (userInviteCreation === null) throw new Error('User invitation creation failed');        
         });
 
+        if(req.session)
+        {
+            req.session.invitedUser = {
+                email : req.body.email,
+                firstName : req.body.firstName,
+                lastName : req.body.lastName
+            }
+        }
         res.redirect('/admin/invite/user/success');
     }
     catch(error)
