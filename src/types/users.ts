@@ -1,4 +1,4 @@
-import { userRole } from './userRoles';
+import { user_role } from './userRoles';
 
 export interface loginDetails
 {
@@ -10,10 +10,11 @@ export interface User
 {
     id : string,
     company_id : string,
+    company_name : string,
     email : string,
     first_name : string,
     last_name : string,
-    role : userRole
+    role : user_role,
 }
 
 export interface UserToInvite
@@ -22,5 +23,5 @@ export interface UserToInvite
     email : string,
     first_name : string,
     last_name : string,
-    role : userRole
+    role : user_role
 }

@@ -36,12 +36,19 @@
                     </form>
         </div>
     <% } else { %>
+
         <div class="loggedInInfo">
             <p><h1>Logged in as </h1> <%= user.email %> </p>
             <% if (user.role === 'admin') { %>
                 <a href="/admin/dashboard"><h2>Admin Dashboard</h2></a>
+            <% } else if (user.role === 'manager') { %>
+                <a href="/manager/dashboard"><h2>Manager Dashboard</h2></a>
             <% } %>
+            
         </div>
+
+        <h1>test</h1>
+
         <div class="loginNavItem">    
             <form action="/logout" method="POST">
                 <button >Logout</button>

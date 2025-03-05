@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Users</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <h1>View Users  of <%= user.company_name %></h1>
+
+    <div class="viewUsersContainer">
+        <table class="viewUsersTable">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Company</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+                
+            </tr>
+            
+        </table>
+</body>
+</html>

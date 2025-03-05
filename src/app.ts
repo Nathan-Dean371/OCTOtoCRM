@@ -10,9 +10,10 @@ import path from 'path';
 import { userAuthMiddleware } from './middleware/user-auth';
 import cookieParser from 'cookie-parser';
 import { verifyRole } from './middleware/roleVerificationMiddleware';
-import { userRole } from './types/userRoles';
+import { user_role } from './types/userRoles';
 import { inviteCompany } from './services/companyService';
 import session from 'express-session';
+import { User } from './types/users';
 
 declare module "express-session"
 {
@@ -56,7 +57,8 @@ app.use(cookieParser());
 // Apply auth middleware to all API routes
 app.use('/api', authMiddleware);
 app.use('/', userAuthMiddleware);
-app.use('/admin', verifyRole([userRole.ADMIN]));
+app.use('/admin', verifyRole([user_role.ADMIN]));
+app.use('/manager', verifyRole([user_role.MANAGER]));
 // Apply role checking middlewate to all API routes
 
 //Connect to postgres database
@@ -74,11 +76,11 @@ app.use('/', loginRoute);
 app.use('/', companyRoute);
 app.use('/', inviteUserRoute);
 //#region Admin routes
-app.get('/admin/dashboard', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+app.get('/admin/dashboard', (req: Request, res: Response) => {
   res.render('admin', { title: 'Admin Dashboard', user: req.user });
 });
 
-app.get('/admin/dashboard/companies', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+app.get('/admin/dashboard/companies', (req: Request, res: Response) => {
   //Get all companies
   prismaClientInstance.companies.findMany().then((companies) => {
     res.render('admin-companies', { title: 'Admin Companies', user: req.user, companies });  
@@ -91,7 +93,7 @@ app.get('/admin/dashboard/companies', verifyRole([userRole.ADMIN]), (req: Reques
   
 });
 
-app.get('/admin/invite/company', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+app.get('/admin/invite/company', (req: Request, res: Response) => {
   res.render('invite-company', { title: 'Invite Company', user: req.user });  
 });
 
@@ -123,8 +125,7 @@ app.get('/admin/invite/user/success' , (req: Request, res: Response) =>
   }
 });
 
-
-app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: Response) => {
+app.get('/admin/invite/user', (req: Request, res: Response) => {
   //Need a dictionary of companies to populate the dropdown
   // Key is the company id, value is the company name
    //Create dictionary
@@ -139,7 +140,8 @@ app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: 
   });
   
 });
-app.get('/admin/dashboard/users', verifyRole([userRole.ADMIN]), async (req: Request, res: Response) => {
+
+app.get('/admin/dashboard/users', async (req: Request, res: Response) => {
   //Get all users with company name using a join
 
   prismaClientInstance.$queryRaw`SELECT users.*, c.name FROM users LEFT JOIN companies c ON users.company_id = c.id`.then((users) => {
@@ -151,7 +153,7 @@ app.get('/admin/dashboard/users', verifyRole([userRole.ADMIN]), async (req: Requ
   });
 });
 
-app.get('/admin/dashboard/user/invites', verifyRole([userRole.ADMIN]), async (req: Request, res: Response) => {
+app.get('/admin/dashboard/user/invites', async (req: Request, res: Response) => {
 
   let companyDictionary : Map<string, string> = new Map<string, string>();
   const companies = prismaClientInstance.companies.findMany().then((companies) => {
@@ -169,6 +171,25 @@ app.get('/admin/dashboard/user/invites', verifyRole([userRole.ADMIN]), async (re
   });
 });
 //#endregion
+
+//#region Manager routes
+
+app.get('/manager/dashboard', (req: Request, res: Response) => {
+  res.render('manager', { title: 'Manager Dashboard', user: req.user });
+});
+
+app.get('/manager/dashboard/users', async (req: Request, res: Response) => {
+  //Get all users with for managers company
+  
+  
+
+
+  res.render('manager-dashboard-users', { title: 'Manager Users', user: req.user });
+});
+
+//#endregion
+
+
 
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');
@@ -188,8 +209,8 @@ app.get('/health', (req: Request, res: Response) => {
 
 
 app.get("/", (req: Request, res: Response) => {
-  //Serve home page
-  const user = req.user;
+  
+  const user = req.user as User;
   res.render('index', { title: 'Home' , user : user});
 });
 

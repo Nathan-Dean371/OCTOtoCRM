@@ -28,8 +28,8 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
             const token = createJWTtoken(email);
             res.cookie('auth-token', token, { httpOnly: true });
             //Redirect to page depending on user role
-            res.redirect('/admin/dashboard');
-            
+            // Get role from jwt token  
+            res.redirect('/');
             return;
         } else {
             res.status(401).json({

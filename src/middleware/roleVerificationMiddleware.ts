@@ -1,22 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errorHandler';
-import { userRole } from '../types/userRoles';
+import { user_role } from '../types/userRoles';
 import { User } from '../types/users';
 
-export const verifyRole = (roles : userRole[]) => (req: Request, res: Response, next: NextFunction) => {
+export const verifyRole = (roles : user_role[]) => (req: Request, res: Response, next: NextFunction) => {
     try 
     {
         const user = req.user;
         // Check if user exists
         if (!user) 
         {
-            res.redirect('/');
             throw new AppError(401, 'Unauthorized');
         }
         // Check if user has the required role
         if (!roles.includes(user.role))
         {
-            res.redirect('/');
             throw new AppError(403, 'Forbidden');
         }
 
@@ -24,6 +22,6 @@ export const verifyRole = (roles : userRole[]) => (req: Request, res: Response, 
 
     }   catch (error)
     {
-        next(error);
+        
     }
 };

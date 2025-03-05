@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <main>  
+        <div class="managerDashboard">
+            <h1>Manager Dashboard</h1>
+            
+            <div id="managerDashboardCardContainer">
+                <div class="flex-row" id="row1">
+                    <div id="companiesCard">
+                        <h2>Company & Users</h2>
+
+                        <a href="company/manage"><button>Manage Company</button></a>
+                        <a href="invite/user"><button>Invite User</button></a>
+                        <a href="dashboard/users"><button>View Users</button></a>
+                    </div>
+                    
+                </div>
+                
+                <div class="flex-row" id="row2">
+                    <div id="tunnelsCard">
+                        <h2>Tunnels</h2>
+    
+                        <a href="dashboard/tunnels"><button>View Tunnels</button></a>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

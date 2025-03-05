@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import prismaClientInstance  from "../services/database/databaseConnector";
 import { inviteUser } from "../services/Users/inviteUser";
 import { UserToInvite, User } from "../types/users";
-import { userRole } from "../types/userRoles";
+import { user_role } from "../types/userRoles";
 
 const router = Router();
 
@@ -37,7 +37,7 @@ const tryInviteCompany : RequestHandler
                         email : req.body.primaryContactEmail,
                         first_name : req.body.primaryContactFirstName,
                         last_name : req.body.primaryContactLastName,
-                        role : userRole.MANAGER
+                        role : user_role.MANAGER
                     }
 
                     const loggedInUser = req.user as User;

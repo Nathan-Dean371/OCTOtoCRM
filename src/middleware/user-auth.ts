@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getUserDetails } from '../services/database/databaseConnector';
 import { User } from '../types/users';
-import { userRole } from '../types/userRoles';
+import { user_role } from '../types/userRoles';
 
 
 const checkForAuthToken = async (req : Request, res : Response, next : NextFunction) => {
@@ -18,27 +18,12 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
         }
         
         const decode = <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
-        console.log('Decoded JWT: ', decode);
-        console.log(decode.user);
-
+        console.log('Decoded token: ', decode);
         const userFromDb  = await getUserDetails(decode.user);
-        //console.log('User from db: ', userFromDb);
-
-        var loggedInUser : User; 
+        
         if(userFromDb)
         {
-            loggedInUser = {
-                id : userFromDb.id,
-                company_id : userFromDb.company_id,
-                email : userFromDb.email,
-                first_name : userFromDb.first_name,
-                last_name : userFromDb.last_name,
-                role : userRole[userFromDb.role],
-
-            };
-
-            req.user = loggedInUser;
-            console.log('User is logged in: ', loggedInUser);
+            req.user = userFromDb;
         }
 
         next();
