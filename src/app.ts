@@ -180,11 +180,15 @@ app.get('/manager/dashboard', (req: Request, res: Response) => {
 
 app.get('/manager/dashboard/users', async (req: Request, res: Response) => {
   //Get all users with for managers company
-  
-  
+  const user = req.user as User;
+  await prismaClientInstance.$queryRaw`SELECT * FROM users WHERE company_id = uuid(${user.company_id})`.then((users) => {
+    res.render('manager-dashboard-users', { title: 'Manager Users', user: req.user, users });  
+  }
+  ).catch((error) => {  
+    console.error(error);
+    res.status(500).send('Internal server error');
+  });
 
-
-  res.render('manager-dashboard-users', { title: 'Manager Users', user: req.user });
 });
 
 //#endregion

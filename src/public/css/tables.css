@@ -1,0 +1,38 @@
+.viewCompaniesContainer
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    margin: 0 2rem;
+}
+
+.TableLargeHeader
+{
+    font-size: 100px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+    margin: 1rem;
+    text-align: center;
+}
+
+table
+{
+    
+    width: 100%;
+    background-color:ivory;
+    
+
+    td
+    {
+        background-color:cornsilk
+        padding: .3rem;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 5px;
+        box-shadow: 0px 0px 20px -10px rgba(0,0,0,0.64);
+        
+    }
+}

@@ -7,7 +7,6 @@
     .success { color: green; }
     .error { color: red; }
     .loading { display: none; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     th { background-color: #f2f2f2; }
     .status-container { margin-top: 20px; }
@@ -98,7 +97,7 @@
     a
     {
         text-decoration: none;
-        color: black;
+        color: inherit;
     }
 
     #companiesCard
@@ -142,3 +141,78 @@
         align-items: center;
         width: 100%; 
     }
+
+    .logoContainer
+    {
+        background-color: royalblue;
+        padding: 1rem;
+        border-radius: 15px;
+        color: azure;
+
+        
+    }
+
+    .logoContainer:hover
+    {
+        background-color: rgb(0, 0, 255);
+    }
+
+    #loggedInFirstName
+    {
+        color: white;
+        filter: drop-shadow(5px 5px 10px #000000);
+    }
+
+    .homeLargeHeading
+    {
+        font-size: 250px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        text-align: center;
+    }
+
+    .homeSmallHeading
+    {
+        font-size: 50px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        text-align: center;
+    }
+
+    .dashboardLargeHeader
+    {
+        font-size: 100px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        margin: 1rem;
+        text-align: center;
+    }
+
+    .managerDashboardContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    body
+    {
+        background-color:darkslategrey
+    }
+
+    #homeSplashContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 5rem 2rem;
+        margin: 0
+    }
+    

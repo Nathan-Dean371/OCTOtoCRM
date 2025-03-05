@@ -20,8 +20,21 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Actions</th>
-                
             </tr>
+
+            <% users.forEach(function(companyUser) { %>
+                <tr>
+                    <td><%= companyUser.first_name %></td>
+                    <td><%= companyUser.last_name %></td>
+                    <td><%= user.company_name %></td>
+                    <td><%= companyUser.email %></td>
+                    <td><%= companyUser.role %></td>
+                    <td>
+                        <a href="/manager/dashboard/users/<%= user.id %>/edit"><button>Edit</button></a>
+                        <a href="/manager/dashboard/users/<%= user.id %>/delete"><button>Delete</button></a>
+                    </td>
+                </tr>
+            <% }); %>
             
         </table>
 </body>
