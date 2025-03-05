@@ -6,9 +6,18 @@ export interface loginDetails
     password: string;
 }
 
-export interface user
+export interface User
 {
     id : string,
+    company_id : string,
+    email : string,
+    first_name : string,
+    last_name : string,
+    role : userRole
+}
+
+export interface UserToInvite
+{
     company_id : string,
     email : string,
     first_name : string,

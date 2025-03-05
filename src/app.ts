@@ -129,7 +129,7 @@ app.get('/admin/invite/user', verifyRole([userRole.ADMIN]), (req: Request, res: 
   // Key is the company id, value is the company name
    //Create dictionary
   let companyDictionary : Map<string, string> = new Map<string, string>();
-  const companies = prismaClientInstance.companies.findMany().then((companies) => {
+  prismaClientInstance.companies.findMany().then((companies) => {
     companies.forEach((company) => 
       {
         companyDictionary.set(company.id, company.name);

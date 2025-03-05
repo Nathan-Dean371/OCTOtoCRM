@@ -1,7 +1,7 @@
 export interface Company
 {
-    companyName : string;
-    companyWebsite? : string;
-    primaryContactPhone : string;
-    primaryContactEmail : string;
+    name : string;
+    website? : string;
+    primary_contact_phone : string;
+    primary_contact_email : string;
 }

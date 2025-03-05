@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getUserDetails } from '../services/database/databaseConnector';
-import { user } from '../types/users';
+import { User } from '../types/users';
 import { userRole } from '../types/userRoles';
 
 
@@ -22,9 +22,9 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
         console.log(decode.user);
 
         const userFromDb  = await getUserDetails(decode.user);
-        console.log('User from db: ', userFromDb);
+        //console.log('User from db: ', userFromDb);
 
-        var loggedInUser : user; 
+        var loggedInUser : User; 
         if(userFromDb)
         {
             loggedInUser = {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errorHandler';
 import { userRole } from '../types/userRoles';
-import { user } from '../types/users';
+import { User } from '../types/users';
 
 export const verifyRole = (roles : userRole[]) => (req: Request, res: Response, next: NextFunction) => {
     try 

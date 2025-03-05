@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { user } from '../types/users';
+import { User } from '../types/users';
 
-export function createJWTtoken(user : user)
+export function createJWTtoken(user : User)
 {
     const secretKey  = process.env.JWT_SECRET as string;
     const token = jwt.sign({

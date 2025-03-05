@@ -16,8 +16,8 @@
 
     <div class="inviteUserContainer">
         <form class="inviteUserForm" action="/admin/invite/user" method="post">
-            <label for="company">Company</label>
-            <select name="company" id="company">
+            <label for="companyId">Company</label>
+            <select name="companyId" id="companyId">
                 <% companyDictionary.forEach(function(companyName, companyId){ %>
                     <option value="<%= companyId %>"><%= companyName %></option>
                 <% }); %>

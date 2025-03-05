@@ -1,9 +1,9 @@
 import { Router, RequestHandler, Request, Response } from "express";
-import { v4 as uuidv4 } from 'uuid';
 import { Prisma } from "@prisma/client";
 import prismaClientInstance  from "../services/database/databaseConnector";
-import session from "express-session";
-import { user } from "../types/users";
+import { inviteUser } from "../services/Users/inviteUser";
+import { UserToInvite, User } from "../types/users";
+import { userRole } from "../types/userRoles";
 
 const router = Router();
 
@@ -11,9 +11,6 @@ const router = Router();
 
 const tryInviteCompany : RequestHandler
     = async (req : Request, res : Response) =>{
-        //console.log(req)
-        console.log("Request body: ", req.body)
-    
         try
         {
             await prismaClientInstance.$transaction(async (tx) =>{
@@ -35,20 +32,16 @@ const tryInviteCompany : RequestHandler
                         return company.id;
                     })
 
-                    let userInvitationDBinput : Prisma.user_invitationsUncheckedCreateInput;
-                    userInvitationDBinput = {
+                    const userToInvite : UserToInvite = {
+                        company_id : companyID,
                         email : req.body.primaryContactEmail,
-                        company_id  : companyID,
-                        role : "MANAGER",
-                        status : "PENDING",
-                        invitation_token : uuidv4(),
-                        expires_at : new Date(Date.now() + 24*60*60*1000), //24 hours from now
-                        created_by_user_id : (req.user as any).id,
                         first_name : req.body.primaryContactFirstName,
-                        last_name : req.body.primaryContactLastName
-                    }   
-                    let userInviteCreation = await prismaClientInstance.user_invitations.create({data : userInvitationDBinput})
-                    if (userInviteCreation === null) throw new Error('User invitation creation failed');
+                        last_name : req.body.primaryContactLastName,
+                        role : userRole.MANAGER
+                    }
+
+                    const loggedInUser = req.user as User;
+                    await inviteUser(userToInvite, loggedInUser.id, req.body.companyName);
                     
                     if(req.session)
                     {

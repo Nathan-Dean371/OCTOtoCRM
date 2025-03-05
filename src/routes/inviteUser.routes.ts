@@ -3,46 +3,62 @@ import { v4 as uuidv4 } from 'uuid';
 import { Prisma } from "@prisma/client";
 import prismaClientInstance  from "../services/database/databaseConnector";
 import session from "express-session";
-import { user } from "../types/users";
+import { UserToInvite } from "../types/users";
+import { inviteUser } from "../services/Users/inviteUser";
+import { GetCompanyName } from "../services/Companies/Companies";
 
 const router = Router();
 
 const tryInviteUser : RequestHandler = async ( req : Request, res : Response) => {
-    console.log(req.body);
-    try
-    {
-        await prismaClientInstance.$transaction(async (tx) =>
+    
+    if(!req.user)
         {
-            let userInvitationDBinput : Prisma.user_invitationsUncheckedCreateInput;
-                    userInvitationDBinput = {
-                        email : req.body.email,
-                        company_id  : req.body.company,
-                        role : req.body.role,
-                        status : "PENDING",
-                        invitation_token : uuidv4(),
-                        expires_at : new Date(Date.now() + 24*60*60*1000), //24 hours from now
-                        created_by_user_id : (req.user as any).id,
-                        first_name : req.body.firstName,
-                        last_name : req.body.lastName
-                    } 
-            let userInviteCreation = await prismaClientInstance.user_invitations.create({data : userInvitationDBinput})
-            if (userInviteCreation === null) throw new Error('User invitation creation failed');        
-        });
-
-        if(req.session)
-        {
-            req.session.invitedUser = {
-                email : req.body.email,
-                firstName : req.body.firstName,
-                lastName : req.body.lastName
-            }
+            console.error("User not logged in");
+            res.redirect('/admin/invite/user/error');
+            return;
         }
-        res.redirect('/admin/invite/user/success');
+    const createdByUserID = req.user.id as string;
+
+    console.log(req.body);
+    ;
+
+    let companyName = await GetCompanyName(req.body.companyId);
+    console.log("Company name: ", companyName);
+
+    let userToInvite : UserToInvite = {
+        email : req.body.primaryContactEmail || req.body.email,
+        first_name : req.body.primaryContactFirstName || req.body.firstName,
+        last_name : req.body.primaryContactLastName || req.body.lastName,
+        company_id : req.body.companyId,
+        role : req.body.role 
+
     }
-    catch(error)
+
+    await prismaClientInstance.$transaction(async (tx) =>
     {
-        console.error(error);
-    }
+        try
+        {
+            let userInvited = await inviteUser(userToInvite, createdByUserID, companyName);
+            console.log("User invited: ", userInvited);
+        } catch (error)
+        {
+            console.log("Redirect to error");
+            res.redirect('/admin/invite/user/error');
+            console.error("Error inviting user: ", error);
+            
+        }
+        if(req.session)
+            {
+                req.session.invitedUser = {
+                    email : req.body.email,
+                    firstName : req.body.firstName,
+                    lastName : req.body.lastName
+                }
+            }
+        res.redirect('/admin/invite/user/success');
+    });
+
+    
 }
 
 router.post('/admin/invite/user', tryInviteUser);

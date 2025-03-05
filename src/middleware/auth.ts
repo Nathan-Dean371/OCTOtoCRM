@@ -1,14 +1,14 @@
 // src/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errorHandler';
-import { user } from '../types/users';
+import { User } from '../types/users';
 
 // Extend Express Request type to include our custom properties
 declare global {
     namespace Express {
         interface Request {
             apiKey?: string;
-            user? : user;
+            user? : User;
         }
     }
 }
