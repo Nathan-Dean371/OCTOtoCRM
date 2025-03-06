@@ -8,7 +8,7 @@
     margin: 0 2rem;
 }
 
-.TableLargeHeader
+.tableLargeHeader
 {
     font-size: 100px;
     font-weight: bold;
@@ -27,7 +27,7 @@ table
 
     td
     {
-        background-color:cornsilk
+        background-color:cornsilk;
         padding: .3rem;
         text-align: center;
         border: 1px solid black;
@@ -35,4 +35,30 @@ table
         box-shadow: 0px 0px 20px -10px rgba(0,0,0,0.64);
         
     }
+}
+
+.actionButtonsContainer
+{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    form
+    {
+        padding: 0;
+    }
+
+    .actionButton
+    {
+        padding: .2rem;
+
+    }
+
+    button
+    {
+        border: 1px solid black;
+        border-radius: 5px;
+        filter: drop-shadow(2px 2px 4px #000000);
+    }
+    
 }
