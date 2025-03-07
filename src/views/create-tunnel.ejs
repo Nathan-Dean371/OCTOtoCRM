@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<%- include('header'); -%>
+<head>
+    <title>Create Tunnel</title>
+    <link rel="stylesheet" href="/css/tunnel.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <h1 class="largeHeader">Create Tunnel</h1>
+
+
+    <div class="tunnelCreatorContainer">
+        <form action="/manager/tunnel/create" method="post">
+            <label for="tunnelName">Tunnel Name:</label>
+            <input type="text" id="tunnelName" name="tunnelName" required>
+
+            <label for="tunnelSource">Tunnel Source:</label>
+            <select name="tunnelSource" id="tunnelSource">
+                <option value="ventrata">Ventrata</option>
+            </select>
+
+            <label for="sourceAPIkey">Source API Key:</label>   
+            <input type="text" id="sourceAPIkey" name="sourceAPIkey" required>
+
+            <label for="tunnelDestination">Tunnel Destination:</label>
+            <select name="tunnelDestination" id="tunnelDestination">
+                <option value="hubspot">Hubspot</option>
+                <option value="bitrix24">Bitrix24</option>
+            </select>
+
+            <label for="destinationAPIkey">Destination API Key:</label>
+            <input type="text" id="destinationAPIkey" name="destinationAPIkey" required>
+
+            <button type="submit" class="btn btn-primary">Create Tunnel</button>
+        </form>
+
+    </div>
+
+
+
+</body>
+</html>

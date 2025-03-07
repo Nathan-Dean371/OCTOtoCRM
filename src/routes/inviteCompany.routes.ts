@@ -7,8 +7,6 @@ import { user_role } from "../types/userRoles";
 
 const router = Router();
 
-
-
 const tryInviteCompany : RequestHandler
     = async (req : Request, res : Response) =>{
         try

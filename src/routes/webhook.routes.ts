@@ -3,10 +3,10 @@ import { WebhookEvent } from '../types/ventrata';
 import VentrataWebhookHandler from '../services/ventrata/ventrata-webhook-handler';
 
 const router = Router();
-const webhookHandler = new VentrataWebhookHandler();
+//const webhookHandler = new VentrataWebhookHandler();
 
 // Our handler explicitly declares that it returns Promise<void>
-const handleWebhook: RequestHandler = async (req, res): Promise<void> => {
+/* const handleWebhook: RequestHandler = async (req, res): Promise<void> => {
     try {
         const webhookData = req.body as WebhookEvent;
         
@@ -47,9 +47,9 @@ const handleWebhook: RequestHandler = async (req, res): Promise<void> => {
         });
         // No return needed here either
     }
-};
+}; */
 
 // Register the route
-router.post('/ventrata-webhook', handleWebhook);
+router.post('/ventrata-webhook', );
 
 export default router;

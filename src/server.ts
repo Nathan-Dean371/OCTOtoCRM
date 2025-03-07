@@ -22,17 +22,6 @@ import app from './app';
 
 const port = process.env.PORT || 3000;
 
-console.log('Environment variables status:', {
-    NODE_ENV: process.env.NODE_ENV,
-    PORT: process.env.PORT,
-    ZOHO_DOMAIN: process.env.ZOHO_DOMAIN ? 'Set' : 'Not Set',
-    ZOHO_CLIENT_ID: process.env.ZOHO_CLIENT_ID ? 'Set' : 'Not Set',
-    ZOHO_CLIENT_SECRET: process.env.ZOHO_CLIENT_SECRET ? 'Set' : 'Not Set',
-    ZOHO_REFRESH_TOKEN: process.env.ZOHO_REFRESH_TOKEN ? 'Set' : 'Not Set',
-});
-
-
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);

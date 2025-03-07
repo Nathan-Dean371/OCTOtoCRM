@@ -11,8 +11,11 @@
     </div>
 
     <h1 class="tableLargeHeader">View Users</h1>
-
-    <div class="viewUsersContainer">
+    
+    <div class="tableContainer">
+        <% if(showReturnToCompanies) { %>
+        <a class="actionButton" id="returnToCompaniesButton" href="../"><button class="returnToCompaniesButton " >Back</button></a>
+        <% }  %>
         <table class="viewUsersTable">
             <tr>
                 <th>First Name</th>
@@ -31,13 +34,10 @@
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
                     
-                    
                     <td >
                         <div class="actionButtonsContainer">
                             <a class="actionButton" href="/admin/companies/<%= user.id %>/edit"><button >Edit</button></a>
-                            <form class="actionButton" action="/admin/companies/<%= user.id %>?_method=DELETE" method="POST">
-                                <button type="submit">Delete</button>
-                            </form>
+                            
                         </div>
                     </td>
                 </tr>

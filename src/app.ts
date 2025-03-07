@@ -4,6 +4,8 @@ import apiKeyRoute from './routes/api-key.routes';
 import loginRoute from './routes/login-auth.routes';
 import companyRoute from './routes/inviteCompany.routes';
 import inviteUserRoute from './routes/inviteUser.routes';
+import updateCompanyRoute from './routes/updateCompany.route';
+import createTunnelRoute from './routes/createTunnel.route';
 import { authMiddleware } from './middleware/auth';
 import prismaClientInstance, { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
@@ -11,9 +13,10 @@ import { userAuthMiddleware } from './middleware/user-auth';
 import cookieParser from 'cookie-parser';
 import { verifyRole } from './middleware/roleVerificationMiddleware';
 import { user_role } from './types/userRoles';
-import { inviteCompany } from './services/companyService';
+
 import session from 'express-session';
 import { User } from './types/users';
+import { create } from 'domain';
 
 declare module "express-session"
 {
@@ -75,6 +78,8 @@ app.use('/api/', apiKeyRoute)
 app.use('/', loginRoute);
 app.use('/', companyRoute);
 app.use('/', inviteUserRoute);
+app.use('/', updateCompanyRoute);
+app.use('/', createTunnelRoute)
 //#region Admin routes
 app.get('/admin/dashboard', (req: Request, res: Response) => {
   res.render('admin', { title: 'Admin Dashboard', user: req.user });
@@ -145,7 +150,7 @@ app.get('/admin/dashboard/users', async (req: Request, res: Response) => {
   //Get all users with company name using a join
 
   prismaClientInstance.$queryRaw`SELECT users.*, c.name FROM users LEFT JOIN companies c ON users.company_id = c.id`.then((users) => {
-    res.render('admin-users', { title: 'Admin Users', user: req.user, users });  
+    res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : false });  
   }
   ).catch((error) => {  
     console.error(error);
@@ -170,6 +175,22 @@ app.get('/admin/dashboard/user/invites', async (req: Request, res: Response) => 
     res.status(500).send('Internal server error');
   });
 });
+
+app.get('/admin/dashboard/companies/:id/users', async (req: Request, res: Response) => {
+  
+  //Get all users with for managers company
+  const companyId = req.params.id;
+  const users = await prismaClientInstance.users.findMany(
+    {
+      where: {
+        company_id: companyId
+      }
+    }
+  )
+  console.log(users);
+
+  res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : true});
+});
 //#endregion
 
 //#region Manager routes
@@ -188,6 +209,11 @@ app.get('/manager/dashboard/users', async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).send('Internal server error');
   });
+
+});
+
+app.get('/manager/dashboard/tunnels/create', (req: Request, res: Response) => {
+  res.render('create-tunnel', { title: 'Create Tunnel', user: req.user });
 
 });
 

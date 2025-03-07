@@ -12,14 +12,16 @@ interface BookingFilters {
     optionId?: string;
 }
 
-class VentrataService {
+class VentrataService 
+{
+    
     private apiKey: string;
     private baseUrl: string;
 
-    constructor() {
+    constructor(apiKey : string) {
         // Read from environment variables
-        this.apiKey = process.env.VENTRATA_API_KEY || '';
-        this.baseUrl = process.env.VENTRATA_API_URL || '';
+        this.apiKey = apiKey;
+        this.baseUrl = "https://api.ventrata.com/octo";
 
         if (!this.apiKey) {
             throw new Error('Ventrata API key is not configured');
@@ -30,7 +32,7 @@ class VentrataService {
         return {
             'Authorization': `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json',
-            'Octo-Capabilities': '',  // We'll explain capabilities in detail next
+            'Octo-Capabilities': 'notifications', 
         };
     }
 
@@ -86,6 +88,28 @@ class VentrataService {
         }
     }
 
+    async registerSubscriber()
+    {
+        // This method should make a POST request to the Ventrata API
+        // to register a new subscriber and return the subscriber ID
+        // The subscriber ID should be returned as a string
+        const headers =
+        {
+            ...this.getHeaders(),
+            'Octo-Capabilities': 'notifications'
+        }
+
+        //Url to send notifications to
+
+        //Notification type 
+
+        //headers
+
+        axios.post(`${this.baseUrl}/notifications/subscriptions`, {}, { headers })
+
+
+        throw new Error('Method not implemented.');
+    }
     
 }
 

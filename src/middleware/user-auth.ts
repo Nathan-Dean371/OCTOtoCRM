@@ -8,7 +8,7 @@ import { user_role } from '../types/userRoles';
 const checkForAuthToken = async (req : Request, res : Response, next : NextFunction) => {
     try {
         
-        console.log('Checking for auth token on route ', req.path); 
+        //console.log('Checking for auth token on route ', req.path); 
         
         if(req.cookies['auth-token'] === undefined)
         {
@@ -18,7 +18,7 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
         }
         
         const decode = <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
-        console.log('Decoded token: ', decode);
+        //console.log('Decoded token: ', decode);
         const userFromDb  = await getUserDetails(decode.user);
         
         if(userFromDb)
