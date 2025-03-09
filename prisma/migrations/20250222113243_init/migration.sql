@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- CreateEnum
 CREATE TYPE "invitation_status" AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'CANCELLED');
 

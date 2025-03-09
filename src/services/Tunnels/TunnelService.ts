@@ -40,8 +40,8 @@ export function createTunnel(tunnelData : any)
 export function registerSubscription(ventrataApiKey : string)   
 {
     //Register subscriber on Ventrata
-    const ventrataService : VentrataService = new VentrataService(ventrataApiKey.api_key);
-    const subscriberId : string =  ventrataService.registerSubscriber();
+    const ventrataService : VentrataService = new VentrataService(ventrataApiKey);
+    //const subscriberId : string =  ventrataService.registerSubscriber();
 
     //Step 1: Create subscriber
     //POST https://api.ventrata.com/octo/notifications/subcriptions to register a new subscriber
