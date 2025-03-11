@@ -119,6 +119,35 @@ class VentrataService
             );
         }
     }
+
+    async TryToDeleteWebhook(webhookId : string)   
+    {
+        try
+        {
+            const headers = this.getHeaders();
+            const response = await axios.delete(`${this.baseUrl}/webhooks/` + webhookId, { headers } );
+
+            return response.data;
+        } catch (error) 
+        {
+            if (axios.isAxiosError(error) && error.response) 
+            {
+                const errorData = error.response.data;
+                throw new VentrataAPIError(
+                    error.response.status,
+                    errorData.errorMessage || 'An error occurred with the Ventrata API',
+                    errorData.errorCode,
+                    error
+                );
+            }
+            throw new VentrataAPIError(
+                500,
+                'Failed to delete webhook on Ventrata',
+                'UNKNOWN_ERROR',
+                error
+            );
+        }
+    }
 }
 
 export default VentrataService;

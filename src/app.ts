@@ -48,39 +48,27 @@ app.use(session(
   }
 ));
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-app.set('views', 'src/views');
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser());
-
+// Apply Middleware
+EnableMiddleware(app);
 // Apply auth middleware to all API routes
-app.use('/api', authMiddleware);
-app.use('/', userAuthMiddleware);
-app.use('/admin', verifyRole([user_role.ADMIN]));
-app.use('/manager', verifyRole([user_role.MANAGER]));
+EnableAuthMiddleware(app);
 // Apply role checking middlewate to all API routes
-
+EnableRoleMiddleware(app);
 //Connect to postgres database
 connectToDatabase();
 
-//Mount the webhook routes
-app.use('/api/', webhookRoutes);
-
+//#region Routes
 // Mount the API key check route
 app.use('/api/', apiKeyRoute)
-
 app.post('/api/:id/webhook', (req: Request, res: Response) =>
 {
   console.log("Received webhook");
   res.status(200).send("Webhook received from tunnel " + req.params.id);
 
   //To do: Process the webhook, using the webhook handler
-
 });
 
+AddAdminRoutes(app);
 // Routes will be added here
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
@@ -88,146 +76,7 @@ app.use('/', companyRoute);
 app.use('/', inviteUserRoute);
 app.use('/', updateCompanyRoute);
 app.use('/', createTunnelRoute)
-//#region Admin routes
-app.get('/admin/dashboard', (req: Request, res: Response) => {
-  res.render('admin', { title: 'Admin Dashboard', user: req.user });
-});
-
-app.get('/admin/dashboard/companies', (req: Request, res: Response) => {
-  //Get all companies
-  prismaClientInstance.companies.findMany().then((companies) => {
-    res.render('admin-companies', { title: 'Admin Companies', user: req.user, companies });  
-  }
-  ).catch((error) => {  
-    console.error(error);
-    res.status(500).send('Internal server error');
-  });
-
-  
-});
-
-app.get('/admin/invite/company', (req: Request, res: Response) => {
-  res.render('invite-company', { title: 'Invite Company', user: req.user });  
-});
-
-app.get('/admin/invite/company/success' , (req: Request, res: Response) => 
-  {
-    if(req.session.inviteCompany)
-    {
-      let invitedManager = req.session.invitedManager;
-      res.render('invite-company-success', { title: 'Invite Company Success', user: req.user, companyName: req.session?.inviteCompany.companyName, invitedManager});
-      //Clear the session data
-      req.session.inviteCompany = undefined;
-      req.session.invitedManager = undefined;
-      
-    }
-  
-});
-
-app.get('/admin/invite/user/success' , (req: Request, res: Response) =>
-{
-
-  if(req.session.invitedUser)
-  {
-    let invitedUser = req.session.invitedUser;
-    console.log("Clearing session data");
-    res.render('invite-user-success', { title: 'Invite User Success', user: req.user, invitedUser});
-    //Clear the session data
-    console.log("Clearing session data");
-    req.session.invitedUser = undefined;
-  }
-});
-
-app.get('/admin/invite/user', (req: Request, res: Response) => {
-  //Need a dictionary of companies to populate the dropdown
-  // Key is the company id, value is the company name
-   //Create dictionary
-  let companyDictionary : Map<string, string> = new Map<string, string>();
-  prismaClientInstance.companies.findMany().then((companies) => {
-    companies.forEach((company) => 
-      {
-        companyDictionary.set(company.id, company.name);
-      });
-      
-    res.render('invite-user', { title: 'Invite User', user: req.user, companyDictionary});
-  });
-  
-});
-
-app.get('/admin/dashboard/users', async (req: Request, res: Response) => {
-  //Get all users with company name using a join
-
-  prismaClientInstance.$queryRaw`SELECT users.*, c.name FROM users LEFT JOIN companies c ON users.company_id = c.id`.then((users) => {
-    res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : false });  
-  }
-  ).catch((error) => {  
-    console.error(error);
-    res.status(500).send('Internal server error');
-  });
-});
-
-app.get('/admin/dashboard/user/invites', async (req: Request, res: Response) => {
-
-  let companyDictionary : Map<string, string> = new Map<string, string>();
-  const companies = prismaClientInstance.companies.findMany().then((companies) => {
-    companies.forEach((company) => 
-      {
-        companyDictionary.set(company.id, company.name);
-        
-      });
-    });
-  prismaClientInstance.user_invitations.findMany().then((invites) => {
-    res.render('admin-user-invites', { title: 'Admin User Invites', user: req.user, invites, companyDictionary });
-  }).catch((error) => {
-    console.error(error);
-    res.status(500).send('Internal server error');
-  });
-});
-
-app.get('/admin/dashboard/companies/:id/users', async (req: Request, res: Response) => {
-  
-  //Get all users with for managers company
-  const companyId = req.params.id;
-  const users = await prismaClientInstance.users.findMany(
-    {
-      where: {
-        company_id: companyId
-      }
-    }
-  )
-  console.log(users);
-
-  res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : true});
-});
 //#endregion
-
-//#region Manager routes
-
-app.get('/manager/dashboard', (req: Request, res: Response) => {
-  res.render('manager', { title: 'Manager Dashboard', user: req.user });
-});
-
-app.get('/manager/dashboard/users', async (req: Request, res: Response) => {
-  //Get all users with for managers company
-  const user = req.user as User;
-  await prismaClientInstance.$queryRaw`SELECT * FROM users WHERE company_id = uuid(${user.company_id})`.then((users) => {
-    res.render('manager-dashboard-users', { title: 'Manager Users', user: req.user, users });  
-  }
-  ).catch((error) => {  
-    console.error(error);
-    res.status(500).send('Internal server error');
-  });
-
-});
-
-app.get('/manager/dashboard/tunnels/create', (req: Request, res: Response) => {
-  res.render('create-tunnel', { title: 'Create Tunnel', user: req.user });
-  
-});
-
-//#endregion
-
-
 
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');
@@ -253,3 +102,169 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 export default app;
+
+//#region Functions
+function EnableMiddleware(app: express.Express) 
+{
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.set('view engine', 'ejs');
+  app.set('views', 'src/views');
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(cookieParser());
+}
+
+// Apply auth middleware to all API routes
+function EnableAuthMiddleware(app: express.Express)
+{
+  app.use('/api', authMiddleware);
+  app.use('/', userAuthMiddleware);
+}
+
+function EnableRoleMiddleware(app: express.Express)
+{
+  app.use('/admin', verifyRole([user_role.ADMIN]));
+  app.use('/manager', verifyRole([user_role.MANAGER]));
+}
+
+function AddAdminRoutes(app: express.Express)
+{
+  //#region Admin routes
+  app.get('/admin/dashboard', (req: Request, res: Response) => {
+    res.render('admin', { title: 'Admin Dashboard', user: req.user });
+  });
+
+  app.get('/admin/dashboard/companies', (req: Request, res: Response) => {
+    //Get all companies
+    prismaClientInstance.companies.findMany().then((companies) => {
+      res.render('admin-companies', { title: 'Admin Companies', user: req.user, companies });  
+    }
+    ).catch((error) => {  
+      console.error(error);
+      res.status(500).send('Internal server error');
+    });
+
+    
+  });
+
+  app.get('/admin/invite/company', (req: Request, res: Response) => {
+    res.render('invite-company', { title: 'Invite Company', user: req.user });  
+  });
+
+  app.get('/admin/invite/company/success' , (req: Request, res: Response) => 
+    {
+      if(req.session.inviteCompany)
+      {
+        let invitedManager = req.session.invitedManager;
+        res.render('invite-company-success', { title: 'Invite Company Success', user: req.user, companyName: req.session?.inviteCompany.companyName, invitedManager});
+        //Clear the session data
+        req.session.inviteCompany = undefined;
+        req.session.invitedManager = undefined;
+        
+      }
+    
+  });
+
+  app.get('/admin/invite/user/success' , (req: Request, res: Response) =>
+  {
+
+    if(req.session.invitedUser)
+    {
+      let invitedUser = req.session.invitedUser;
+      console.log("Clearing session data");
+      res.render('invite-user-success', { title: 'Invite User Success', user: req.user, invitedUser});
+      //Clear the session data
+      console.log("Clearing session data");
+      req.session.invitedUser = undefined;
+    }
+  });
+  app.get('/admin/invite/user', (req: Request, res: Response) => {
+    //Need a dictionary of companies to populate the dropdown
+    // Key is the company id, value is the company name
+    //Create dictionary
+    let companyDictionary : Map<string, string> = new Map<string, string>();
+    prismaClientInstance.companies.findMany().then((companies) => {
+      companies.forEach((company) => 
+        {
+          companyDictionary.set(company.id, company.name);
+        });
+        
+      res.render('invite-user', { title: 'Invite User', user: req.user, companyDictionary});
+    });
+    
+  });
+  app.get('/admin/dashboard/users', async (req: Request, res: Response) => {
+    //Get all users with company name using a join
+
+    prismaClientInstance.$queryRaw`SELECT users.*, c.name FROM users LEFT JOIN companies c ON users.company_id = c.id`.then((users) => {
+      res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : false });  
+    }
+    ).catch((error) => {  
+      console.error(error);
+      res.status(500).send('Internal server error');
+    });
+  });
+
+  app.get('/admin/dashboard/user/invites', async (req: Request, res: Response) => {
+
+    let companyDictionary : Map<string, string> = new Map<string, string>();
+    const companies = prismaClientInstance.companies.findMany().then((companies) => {
+      companies.forEach((company) => 
+        {
+          companyDictionary.set(company.id, company.name);
+          
+        });
+      });
+    prismaClientInstance.user_invitations.findMany().then((invites) => {
+      res.render('admin-user-invites', { title: 'Admin User Invites', user: req.user, invites, companyDictionary });
+    }).catch((error) => {
+      console.error(error);
+      res.status(500).send('Internal server error');
+    });
+  });
+
+  app.get('/admin/dashboard/companies/:id/users', async (req: Request, res: Response) => {
+    
+    //Get all users with for managers company
+    const companyId = req.params.id;
+    const users = await prismaClientInstance.users.findMany(
+      {
+        where: {
+          company_id: companyId
+        }
+      }
+    )
+    console.log(users);
+
+    res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : true});
+  });
+  //#endregion
+}
+
+function AddManagerRoutes(app : express.Express)
+{
+  //#region Manager routes
+  app.get('/manager/dashboard', (req: Request, res: Response) => {
+    res.render('manager', { title: 'Manager Dashboard', user: req.user });
+  });
+
+  app.get('/manager/dashboard/users', async (req: Request, res: Response) => {
+    //Get all users with for managers company
+    const user = req.user as User;
+    await prismaClientInstance.$queryRaw`SELECT * FROM users WHERE company_id = uuid(${user.company_id})`.then((users) => {
+      res.render('manager-dashboard-users', { title: 'Manager Users', user: req.user, users });  
+    }
+    ).catch((error) => {  
+      console.error(error);
+      res.status(500).send('Internal server error');
+    });
+
+  });
+
+  app.get('/manager/dashboard/tunnels/create', (req: Request, res: Response) => {
+    res.render('create-tunnel', { title: 'Create Tunnel', user: req.user });
+    
+  });
+  //#endregion
+}
+//#endregion

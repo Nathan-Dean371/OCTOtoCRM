@@ -75,7 +75,7 @@ export function generateWebhookUrl(tunnelId : UUID, req? : any) : string
     
     // Fall back to environment variable
     const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
-    return `${baseUrl}/webhook/${tunnelId}`;
+    return `${baseUrl}/api/${tunnelId}/webhook`;
 }
 
 function createVentrataSource(tunnelData : any) : SourceConfig
@@ -153,7 +153,13 @@ async function TestVentrataSource(sourceConfig : SourceConfig) : Promise<boolean
         // 4. Test webhook creation
         const webhookResult = await ventrataService.TryToCreateWebhook(webhookUrl);
         console.log("Webhook created: ", webhookResult);
-        return true;
+        // Delete the webhook
+        const deleteWebhookResult = await ventrataService.TryToDeleteWebhook(webhookResult.id);
+
+        if(deleteWebhookResult == 200)
+            return true;
+        else
+            return false;
     } catch (error) 
     {
         console.error("Ventrata API test failed:", error);
