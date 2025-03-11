@@ -14,7 +14,7 @@
 
 
     <div class="tunnelCreatorContainer">
-        <form action="/manager/tunnel/create" method="post">
+        <form action="/manager/dashboard/tunnels/create" method="post">
             <label for="tunnelName">Tunnel Name:</label>
             <input type="text" id="tunnelName" name="tunnelName" required>
 
@@ -30,6 +30,7 @@
             <select name="tunnelDestination" id="tunnelDestination">
                 <option value="hubspot">Hubspot</option>
                 <option value="bitrix24">Bitrix24</option>
+                <option value="zoho">Zoho</option>
             </select>
 
             <label for="destinationAPIkey">Destination API Key:</label>

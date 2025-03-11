@@ -1,13 +1,14 @@
 export interface SourceConfig 
 {
+    "sourceType": string,
     "api_key": string,
     "api_url": string,
-    "subscription_id": string
+    "webhook_url": string
 }
 
 export interface DestinationConfig 
 {
-    
+    "destinationType": string
 }
 
 
@@ -22,3 +23,14 @@ export interface ZOHOConfig extends DestinationConfig
         "bookings": string
     }
 }
+
+export interface Tunnel 
+{
+    tunnelId: string,
+    tunnelName: string,
+    tunnelSource: string,
+    tunnelDestination: string,
+    sourceConfig: SourceConfig,
+    destinationConfig: DestinationConfig
+}
+

@@ -32,7 +32,7 @@ class VentrataService
         return {
             'Authorization': `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json',
-            'Octo-Capabilities': 'notifications', 
+            'Octo-Capabilities': 'ventrata/webhooks', 
         };
     }
 
@@ -88,29 +88,37 @@ class VentrataService
         }
     }
 
-    async registerSubscriber()
-    {
-        // This method should make a POST request to the Ventrata API
-        // to register a new subscriber and return the subscriber ID
-        // The subscriber ID should be returned as a string
-        const headers =
+    async TryToCreateWebhook(webhookUrl : string) 
+    {    
+        try
         {
-            ...this.getHeaders(),
-            'Octo-Capabilities': 'notifications'
+            const headers = this.getHeaders();
+            const response = await axios.post(`${this.baseUrl}/webhooks`, {
+                "url": webhookUrl,
+                "event": "booking_update"
+            }, { headers });
+
+            return response.data;
+        } catch (error) 
+        {
+            if (axios.isAxiosError(error) && error.response) 
+            {
+                const errorData = error.response.data;
+                throw new VentrataAPIError(
+                    error.response.status,
+                    errorData.errorMessage || 'An error occurred with the Ventrata API',
+                    errorData.errorCode,
+                    error
+                );
+            }
+            throw new VentrataAPIError(
+                500,
+                'Failed to create webhook on Ventrata',
+                'UNKNOWN_ERROR',
+                error
+            );
         }
-
-        //Url to send notifications to
-
-        //Notification type 
-
-        //headers
-
-        axios.post(`${this.baseUrl}/notifications/subscriptions`, {}, { headers })
-
-
-        throw new Error('Method not implemented.');
     }
-    
 }
 
 export default VentrataService;
