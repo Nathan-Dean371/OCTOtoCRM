@@ -38,7 +38,6 @@ declare module "express-session"
   }
 }
 
-
 const app: Express = express();
 app.use(session(
   {
@@ -72,6 +71,15 @@ app.use('/api/', webhookRoutes);
 
 // Mount the API key check route
 app.use('/api/', apiKeyRoute)
+
+app.post('/api/:id/webhook', (req: Request, res: Response) =>
+{
+  console.log("Received webhook");
+  res.status(200).send("Webhook received from tunnel " + req.params.id);
+
+  //To do: Process the webhook, using the webhook handler
+
+});
 
 // Routes will be added here
 // app.use('/api/v1', routes);

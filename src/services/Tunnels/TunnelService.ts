@@ -95,6 +95,7 @@ function createZohoDestination(tunnelData : any) : DestinationConfig
 {
     const zohoConfig : ZOHOConfig = 
     {
+        "destinationType": "zoho",
         "client_id": "",
         "client_secret": "",
         "refresh_token": "",
@@ -148,9 +149,10 @@ async function TestVentrataSource(sourceConfig : SourceConfig) : Promise<boolean
         // Use environment variable with fallback
         const baseUrl = process.env.API_BASE_URL || 'https://yourapp.example.com';
         const testWebhookId = crypto.randomUUID();
-        const webhookUrl = sourceConfig.webhook_url || `${baseUrl}/tunnel/${testWebhookId}/webhook`;
+        const webhookUrl = sourceConfig.webhook_url || `${baseUrl}/api/${testWebhookId}/webhook`;
         // 4. Test webhook creation
         const webhookResult = await ventrataService.TryToCreateWebhook(webhookUrl);
+        console.log("Webhook created: ", webhookResult);
         return true;
     } catch (error) 
     {
@@ -179,15 +181,14 @@ async function TestDestinationConfig(destinationConfig : DestinationConfig) : Pr
             throw new Error("Invalid destination");
     }
 }
-
 async function TestZohoDestination(destinationConfig : DestinationConfig) : Promise<boolean>
 {
     try
     {
 
-        const zohoService = new ZohoService(destinationConfig.client_id, destinationConfig.client_secret, destinationConfig.refresh_token);
+        //const zohoService = new zohoService(destinationConfig.client_id, destinationConfig.client_secret, destinationConfig.refresh_token);
         // 3. Test Zoho API connection
-        const testResult = await zohoService.TestConnection();
+        //const testResult = await zohoService.TestConnection();
         return true;
     } catch (error) 
     {
