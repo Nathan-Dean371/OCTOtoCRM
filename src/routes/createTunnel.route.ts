@@ -8,8 +8,6 @@ const router = Router();
 const tryCreateTunnel = async (req: Request, res: Response) => 
 {    
     const tunnelData = req.body;
-
-    console.log(tunnelData);
     CreateTunnel(tunnelData);
 
     
@@ -17,5 +15,9 @@ const tryCreateTunnel = async (req: Request, res: Response) =>
 }
 
 router.post('/manager/dashboard/tunnels/create', tryCreateTunnel);
+
+router.get('/manager/dashboard/tunnels/create/new/:tunnerlID/configureSetup/', (req: Request, res: Response) => {
+    res.render('create-tunnel-configure-source', { title: 'Create Tunnel', user: req.user, tunnelId: req.params.tunnelId });
+});
 
 export default router;

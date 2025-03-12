@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<%- include('header'); -%>
+<head>
+    <title>Create Tunnel</title>
+    <link rel="stylesheet" href="/css/tunnel.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <h1 class="largeHeader">Create Tunnel</h1>
+
+
+    <div class="formContainer">
+        <label for="source">Source</label>
+        <select value="source" name="source" id="source" default="source">
+            <option value="">Source</option>
+            <option value="ventrata">Ventrata</option>
+        </select>
+
+        <div class="ventrataInputs" style="display: none;">
+            <form>
+                <label for="ventrataApiKey">Ventrata API Key</label>
+                <input type="text" name="ventrataApiKey" id="ventrataApiKey">
+            
+                <button >Test Connection</button>
+            </form>
+        </div>
+
+    </div>
+</body>
+
+<script>
+    const select = document.querySelector('select');
+    const ventrataInputs = document.querySelector('.ventrataInputs');
+    console.log(select);
+
+    select.addEventListener('change', (e) => 
+    {
+        console.log(e.target.value);
+        if (e.target.value == 'ventrata') {
+            ventrataInputs.style.display = 'block';
+        } else {
+            ventrataInputs.style.display = 'none';
+        }
+    });
+</script>
+
+</html>

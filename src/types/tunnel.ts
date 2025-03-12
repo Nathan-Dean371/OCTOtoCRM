@@ -11,6 +11,20 @@ export interface DestinationConfig
     "destinationType": string
 }
 
+export interface BitrixConfig extends DestinationConfig
+{
+    "client_id": string,
+    "client_secret": string,
+    "refresh_token": string,
+    "portal_domain": string,
+    "entity_type_id"?: string,  // ID of the custom SPA entity (optional until created)
+    "api_endpoint"?: string,    // The REST API endpoint URL (will be populated after auth)
+    "modules": {
+        "contacts": string,     // Usually "CRM_CONTACT"
+        "bookings": string      // Your custom SPA entity name
+    }
+}
+
 
 export interface ZOHOConfig extends DestinationConfig
 {

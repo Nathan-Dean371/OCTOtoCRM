@@ -1,9 +1,10 @@
 import { UUID } from 'crypto';
-import { DestinationConfig, SourceConfig, ZOHOConfig } from '../../types/tunnel';
+import { DestinationConfig, SourceConfig, ZOHOConfig, BitrixConfig } from '../../types/tunnel';
 import { v4 as uuidv4 } from 'uuid';
 import  VentrataService  from '../ventrata/ventrata-service';
 import { Tunnel } from '../../types/tunnel';
 import { VentrataAPIError } from '../../utils/errors';
+import  BitrixAuthService  from '../Bitrix/Bitrix-auth';
 import axios from 'axios';
 
 export function CreateTunnel(tunnelData : any)
@@ -38,9 +39,29 @@ function createDestinationConfig(tunnelData: any) : DestinationConfig{
         case "zoho":
             destinationConfig = createZohoDestination(tunnelData);
             return destinationConfig;
+        case "bitrix":
+            destinationConfig = CreateBitrixDestination(tunnelData);
+            return destinationConfig;
         default:
             throw new Error("Invalid destination");
     }
+}
+
+function CreateBitrixDestination(tunnelData : any) : DestinationConfig
+{
+    const bitrixConfig: BitrixConfig = {
+        "destinationType": "bitrix",
+        "client_id": tunnelData.bitrix_client_id,
+        "client_secret": tunnelData.bitrix_client_secret,
+        "refresh_token": tunnelData.bitrix_refresh_token || "",  // May be empty initially
+        "portal_domain": tunnelData.bitrix_portal_domain,
+        "modules": {
+            "contacts": "CRM_CONTACT",
+            "bookings": "Tour_Bookings"  // The name you'll give your SPA
+        }
+    };
+
+    return bitrixConfig;
 }
 
 function createSourceConfig(tunnelData: any) : SourceConfig{
@@ -52,18 +73,6 @@ function createSourceConfig(tunnelData: any) : SourceConfig{
         default:
             throw new Error("Invalid source");
     }
-}
-
-export function registerSubscription(ventrataApiKey : string)   
-{
-    //Register subscriber on Ventrata
-    const ventrataService : VentrataService = new VentrataService(ventrataApiKey);
-    //const subscriberId : string =  ventrataService.registerSubscriber();
-
-    //Step 1: Create subscriber
-    //POST https://api.ventrata.com/octo/notifications/subcriptions to register a new subscriber
-    //Step 2: Store the webhook id in the tunnel
-    //Step 3: Test the webhook
 }
 
 export function generateWebhookUrl(tunnelId : UUID, req? : any) : string
@@ -119,6 +128,10 @@ function TestTunnelConfig(tunnel : Tunnel)
         throw new Error("Invalid source configuration");
     }
     //Step 2: Test the destination configuration
+    if(!TestDestinationConfig(tunnel.destinationConfig))
+    {
+        throw new Error("Invalid destination configuration");
+    }
 
 }
 
@@ -183,6 +196,10 @@ async function TestDestinationConfig(destinationConfig : DestinationConfig) : Pr
     {
         case "zoho":
             return await TestZohoDestination(destinationConfig);
+            break;
+        case "bitrix":
+            return await TestBitrixDestination(destinationConfig as BitrixConfig);
+            break;
         default:
             throw new Error("Invalid destination");
     }
@@ -199,6 +216,52 @@ async function TestZohoDestination(destinationConfig : DestinationConfig) : Prom
     } catch (error) 
     {
         console.error("Zoho API test failed:", error);
+        return false;
+    }
+}
+
+async function TestBitrixDestination(destinationConfig : BitrixConfig) : Promise<boolean>
+{
+    try {
+        console.log("Testing Bitrix destination configuration");
+        
+        // Create the auth service using configuration
+        const bitrixAuth = new BitrixAuthService({
+            clientId: destinationConfig.client_id,
+            clientSecret: destinationConfig.client_secret,
+            refreshToken: destinationConfig.refresh_token,
+            portalDomain: destinationConfig.portal_domain
+        });
+        
+        // Test authentication by getting an access token
+        const accessToken = await bitrixAuth.getAccessToken();
+        
+        // If we have an entity_type_id, verify it exists
+        if (destinationConfig.entity_type_id) {
+            const apiEndpoint = await bitrixAuth.getPortalEndpoint();
+            
+            // Test entity type existence
+            const response = await axios.post(`${apiEndpoint}crm.type.get`, {
+                auth: accessToken,
+                id: destinationConfig.entity_type_id
+            });
+            
+            if (!response.data.result) {
+                console.log("Bitrix entity type not found:", destinationConfig.entity_type_id);
+                return false;
+            }
+            
+            console.log("Bitrix entity type verified:", response.data.result.title);
+        }
+        
+        console.log("Bitrix destination configuration is valid");
+        return true;
+        
+    } catch (error) {
+        console.error("Bitrix destination test failed:", error);
+        if (axios.isAxiosError(error)) {
+            console.error("API response:", error.response?.data);
+        }
         return false;
     }
 }

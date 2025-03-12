@@ -6,6 +6,7 @@ import companyRoute from './routes/inviteCompany.routes';
 import inviteUserRoute from './routes/inviteUser.routes';
 import updateCompanyRoute from './routes/updateCompany.route';
 import createTunnelRoute from './routes/createTunnel.route';
+import bitrixRoutes from './routes/bitrixHandler.routes';
 import { authMiddleware } from './middleware/auth';
 import prismaClientInstance, { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
@@ -69,13 +70,15 @@ app.post('/api/:id/webhook', (req: Request, res: Response) =>
 });
 
 AddAdminRoutes(app);
+AddManagerRoutes(app);
 // Routes will be added here
 // app.use('/api/v1', routes);
 app.use('/', loginRoute);
 app.use('/', companyRoute);
 app.use('/', inviteUserRoute);
 app.use('/', updateCompanyRoute);
-app.use('/', createTunnelRoute)
+app.use('/', createTunnelRoute);
+app.use('/', bitrixRoutes);
 //#endregion
 
 app.post('/logout', (req: Request, res: Response) => {
@@ -100,6 +103,9 @@ app.get("/", (req: Request, res: Response) => {
   const user = req.user as User;
   res.render('index', { title: 'Home' , user : user});
 });
+
+
+
 
 export default app;
 
@@ -261,9 +267,17 @@ function AddManagerRoutes(app : express.Express)
 
   });
 
-  app.get('/manager/dashboard/tunnels/create', (req: Request, res: Response) => {
-    res.render('create-tunnel', { title: 'Create Tunnel', user: req.user });
+  app.get('/manager/dashboard/tunnels/create/new', async (req: Request, res: Response) => {
     
+    //Generate a new tunnel ID
+    const tunnelIdJSON = await prismaClientInstance.$queryRaw<{id: string}[]>`SELECT uuid_generate_v4() as id`;
+    const tunnelId = tunnelIdJSON[0].id;
+    console.log("New tunnel ID: " + JSON.stringify(tunnelId));
+
+    //Goto the tunnel creation step 1 page url = "+ /configureSetup"
+    res.redirect('/manager/dashboard/tunnels/create/new/' + tunnelId + '/configureSetup/');
+    
+
   });
   //#endregion
 }
