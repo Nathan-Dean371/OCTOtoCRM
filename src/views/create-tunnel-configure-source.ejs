@@ -14,21 +14,28 @@
 
 
     <div class="formContainer">
-        <label for="source">Source</label>
-        <select value="source" name="source" id="source" default="source">
-            <option value="">Source</option>
-            <option value="ventrata">Ventrata</option>
-        </select>
-
-        <div class="ventrataInputs" style="display: none;">
-            <form>
-                <label for="ventrataApiKey">Ventrata API Key</label>
-                <input type="text" name="ventrataApiKey" id="ventrataApiKey">
-            
-                <button >Test Connection</button>
-            </form>
+        <div id="inputsContainer">    
+            <label for="source">Source</label>
+            <select value="source" name="source" id="source" default="source">
+                <option value="">Source</option>
+                <option value="ventrata">Ventrata</option>
+            </select>
+            <div class="ventrataInputs" style="display: none;">
+                
+                    <label for="ventrataApiKey">Ventrata API Key</label>
+                    <input type="text" name="ventrataApiKey" id="ventrataApiKey">
+                
+                    <button id="testSource">Test Connection</button>
+            </div>
         </div>
 
+        <div id="ventrataValues" style="display: none;">
+            <button id="nextStepButton">Next Step</button>
+        </div>
+
+        <div id="testMessageContainer">
+
+        </div>
     </div>
 </body>
 
@@ -46,6 +53,68 @@
             ventrataInputs.style.display = 'none';
         }
     });
+
+    const testSourceButton = document.getElementById('testSource');
+    const ventrataValues = document.getElementById('ventrataValues');
+    const inputsContainer = document.getElementById('inputsContainer');
+    testSourceButton.addEventListener('click', async (e) => {
+        const ventrataApiKey = document.getElementById('ventrataApiKey');
+        fetch('https://api.ventrata.com/octo/suppliers', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${ventrataApiKey.value}`,
+                    'Content-Type': 'application/json',
+                    'Octo-Capabilities': '', 
+                }
+            }).then(respone => respone.json()).then(data =>  {
+                console.log(data);
+                //If response status is an object
+                if (data.error) 
+                {   
+                    displayMessage('error', data.errorMessage);
+                    HandleTestResult(false);
+                } else {
+                    displayMessage('success', 'Connection successful');
+                    HandleTestResult(true);
+                }
+            })
+
+    });
+
+    function displayMessage(type, message)
+    {
+        const messageContainer = document.getElementById('testMessageContainer');
+        const messageDiv = document.createElement('div');
+        //Clear message container
+        messageContainer.innerHTML = '';
+        messageDiv.classList.add(type);
+        messageDiv.innerHTML = message;
+        messageContainer.appendChild(messageDiv);
+    }
+
+    function HandleTestResult(result)
+    {
+        if (result) 
+        {
+            
+            //Add source value and api key value
+            const source = document.createElement('p');
+            const apiKey = document.createElement('p');
+            source.innerHTML = 'Source: Ventrata';
+            apiKey.innerHTML = `API Key: ${document.getElementById('ventrataApiKey').value}`;
+            ventrataValues.appendChild(apiKey);
+            ventrataValues.appendChild(source); 
+            ventrataValues.style.display = 'block';
+            inputsContainer.style.display = 'none';
+            testSourceButton.style.display = 'none';
+
+        } 
+        else 
+        {
+            testSourceButton.style.display = 'block';
+        }
+    }
+
 </script>
 
 </html>
