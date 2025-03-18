@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function()
         
         try {
             // Test the API key first
-            const testResponse = await fetch('/test-ventrata-key', {
+            const testResponse = await fetch('/tunnels/test-ventrata-key', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

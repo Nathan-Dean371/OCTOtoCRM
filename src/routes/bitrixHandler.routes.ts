@@ -9,12 +9,29 @@ import { BitrixConfig } from "../types/tunnel";
 const router = Router();
 
 const handleBitrixCallback: RequestHandler = async (req: Request, res: Response) => {
+    try {
     // Extract parameters from the query string
-    const { code, state } = req.query;
-    const tunnelId = state as string;
+    const code = req.query.code;
+    const state = req.query.state;
+     // Explicitly cast to string with better type narrowing
+     let tunnelId: string = '';
+     if (typeof state === 'string') {
+         tunnelId = state;
+     } else if (Array.isArray(state) && state.length > 0) {
+         tunnelId = String(state[0]);
+     }
+     
+     let authCode: string = '';
+     if (typeof code === 'string') {
+         authCode = code;
+     } else if (Array.isArray(code) && code.length > 0) {
+         authCode = String(code[0]);
+     }
+
+    console.log(`Received Bitrix callback: code=${!!code}, tunnelId=${tunnelId}`);
 
       // Validate required parameters
-    if (!code || !tunnelId) {
+    if (!authCode || !tunnelId) {
         res.status(400).json({
             success: false,
             message: "Missing required parameters (code or state)"
@@ -22,7 +39,7 @@ const handleBitrixCallback: RequestHandler = async (req: Request, res: Response)
         return;
     }
 
-    try {
+    
         // Retrieve tunnel data from database
         const tunnel = await prismaClientInstance.tunnels.findUnique({
             where: { id: tunnelId }
@@ -96,6 +113,14 @@ const handleBitrixCallback: RequestHandler = async (req: Request, res: Response)
     }catch (error) {
         console.error("Error handling Bitrix callback:", error);
         
+        // Similarly, in the catch block:
+        let tunnelId: string = '';
+        const state = req.query.state;
+        if (typeof state === 'string') {
+            tunnelId = state;
+        } else if (Array.isArray(state) && state.length > 0) {
+            tunnelId = String(state[0]);
+        }
         // Update tunnel status to ERROR
         await prismaClientInstance.tunnels.update({
             where: { id: tunnelId },
@@ -111,9 +136,9 @@ const handleBitrixCallback: RequestHandler = async (req: Request, res: Response)
 };
 
 // Define route for Bitrix OAuth callback
-router.get('/api/bitrix/callback', handleBitrixCallback);
+router.get('/bitrix/callback', handleBitrixCallback);
 // Define route for handling Bitrix webhook events
-router.post('/api/bitrix/:tunnelId/handler', async (req: Request, res: Response) => {
+router.post('/bitrix/:tunnelId/handler', async (req: Request, res: Response) => {
     const { tunnelId } = req.params;
     
     try {

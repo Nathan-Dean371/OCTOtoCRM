@@ -87,7 +87,7 @@ app.use('/', inviteUserRoute);
 app.use('/', updateCompanyRoute);
 app.use('/', createTunnelRoute);
 app.use('/', bitrixRoutes);
-app.use('/', tunnelRoutes);
+app.use('/tunnels', tunnelRoutes);
 //#endregion
 
 app.post('/logout', (req: Request, res: Response) => {

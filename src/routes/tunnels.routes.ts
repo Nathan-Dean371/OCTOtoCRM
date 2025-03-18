@@ -6,6 +6,7 @@ import { testVentrataAPIKey, generateWebhookUrl } from "../services/Tunnels/Tunn
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 import BitrixAuthService from "../services/Bitrix/Bitrix-auth";
+import { promises } from "dns";
 
 const router = Router();
 
@@ -150,7 +151,7 @@ router.post('/create', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
+router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) : Promise<void> => {
     // CSRF protection
 
     if(!req.session.tunnelSetup || !req.user)
@@ -164,6 +165,7 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             success: false,
             message: 'Invalid CSRF token'
         });
+        return;
     }
     
     // Step token validation
@@ -173,6 +175,7 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             success: false,
             message: 'Invalid step token'
         });
+        return;
     }
     
     // Verify the correct step
@@ -181,6 +184,7 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             success: false,
             message: 'Invalid step sequence'
         });
+        return;
     }
     
     const { tunnelId } = req.params;
@@ -192,6 +196,7 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             success: false,
             message: 'All fields are required'
         });
+        return;
     }
     
     // Domain format validation
@@ -200,6 +205,7 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             success: false,
             message: 'Invalid portal domain format'
         });
+        return;
     }
     
     try {
@@ -212,11 +218,13 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             }
         });
         
-        if (!tunnel) {
+        if (!tunnel) 
+        {
             res.status(404).json({
                 success: false,
                 message: 'Tunnel not found or access denied'
             });
+            return;
         }
         
         // Update tunnel in database
@@ -261,12 +269,15 @@ router.post('/:tunnelId/update-bitrix', async (req: Request, res: Response) => {
             authUrl,
             stepToken: newStepToken
         });
+        return;
+        
     } catch (error) {
         console.error('Error updating Bitrix configuration:', error);
         res.status(500).json({
             success: false,
             message: 'Error updating Bitrix configuration'
         });
+        return;
     }
 });
 
