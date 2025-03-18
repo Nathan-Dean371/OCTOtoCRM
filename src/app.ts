@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import webhookRoutes from './routes/webhook.routes';
 import apiKeyRoute from './routes/api-key.routes';
 import loginRoute from './routes/login-auth.routes';
+import tunnelRoutes from './routes/tunnels.routes';
 import companyRoute from './routes/inviteCompany.routes';
 import inviteUserRoute from './routes/inviteUser.routes';
 import updateCompanyRoute from './routes/updateCompany.route';
@@ -14,7 +15,7 @@ import { userAuthMiddleware } from './middleware/user-auth';
 import cookieParser from 'cookie-parser';
 import { verifyRole } from './middleware/roleVerificationMiddleware';
 import { user_role } from './types/userRoles';
-
+import crypto from 'crypto';
 import session from 'express-session';
 import { User } from './types/users';
 import { create } from 'domain';
@@ -35,7 +36,14 @@ declare module "express-session"
       email : string,
       firstName : string,
       lastName : string
+    },
+    tunnelSetup: {
+      tunnelId: string,
+      currentStep: number,
+      stepToken: string,
+      apiKeyValidated?: boolean
     }
+    csrfToken?: string 
   }
 }
 
@@ -79,6 +87,7 @@ app.use('/', inviteUserRoute);
 app.use('/', updateCompanyRoute);
 app.use('/', createTunnelRoute);
 app.use('/', bitrixRoutes);
+app.use('/', tunnelRoutes);
 //#endregion
 
 app.post('/logout', (req: Request, res: Response) => {
@@ -104,9 +113,6 @@ app.get("/", (req: Request, res: Response) => {
   res.render('index', { title: 'Home' , user : user});
 });
 
-
-
-
 export default app;
 
 //#region Functions
@@ -118,6 +124,13 @@ function EnableMiddleware(app: express.Express)
   app.set('views', 'src/views');
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(cookieParser());
+  app.use((req, res, next) => {
+    // Generate CSRF token if it doesn't exist
+    if (!req.session.csrfToken) {
+      req.session.csrfToken = crypto.randomBytes(16).toString('hex');
+    }
+    next();
+  });
 }
 
 // Apply auth middleware to all API routes

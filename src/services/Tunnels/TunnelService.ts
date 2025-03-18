@@ -75,7 +75,7 @@ function createSourceConfig(tunnelData: any) : SourceConfig{
     }
 }
 
-export function generateWebhookUrl(tunnelId : UUID, req? : any) : string
+export function generateWebhookUrl(tunnelId : string, req? : any) : string
 {
   // First try to use request info if available
     if (req && req.protocol && req.get) {
@@ -262,6 +262,43 @@ async function TestBitrixDestination(destinationConfig : BitrixConfig) : Promise
         if (axios.isAxiosError(error)) {
             console.error("API response:", error.response?.data);
         }
+        return false;
+    }
+}
+
+export async function testVentrataAPIKey(apiKey: string): Promise<boolean> {
+    if (!apiKey || apiKey.trim() === '') {
+        return false;
+    }
+    
+    try {
+        // Create a temporary Ventrata service instance with the provided key
+        const ventrataService = new VentrataService(apiKey);
+        
+        // Try to make a simple request (get suppliers list)
+        // This will throw an error if the API key is invalid
+        await axios.get('https://api.ventrata.com/octo/suppliers', {
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'Octo-Capabilities': '' // Empty capabilities for a simple test
+            }
+        });
+        
+        // If we got here, the request was successful
+        return true;
+    } catch (error) {
+        console.error('Error testing Ventrata API key:', error);
+        
+        // Check if the error is specifically an authentication error
+        if (axios.isAxiosError(error) && error.response) {
+            // 401 Unauthorized or 403 Forbidden indicate an invalid API key
+            if (error.response.status === 401 || error.response.status === 403) {
+                return false;
+            }
+        }
+        
+        // For any other type of error, we'll consider the test as failed
         return false;
     }
 }
