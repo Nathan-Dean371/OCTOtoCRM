@@ -1,0 +1,511 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    }
+    body { font-family: 'montserrat', sans-serif; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .success { color: green; }
+    .error { color: red; }
+    .loading { display: none; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .status-container { margin-top: 20px; }
+    
+    #testLogin { margin-top: 20px; padding: 1rem; background-color: antiquewhite; }
+    a{ text-decoration: none; }
+    
+
+    .flex
+    {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .card
+    {
+
+        padding: 1rem;
+        border-radius: 15px;
+        margin: 1rem;
+        box-shadow: 5px 5px 10px #000000;
+        
+    }
+
+    
+
+    input[type=submit] {
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+    }
+
+    .row
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: .3rem;
+
+        width: 100%;
+    }
+
+    .column
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        align-items: flex-start;
+    }
+
+
+    .login-container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+   
+    }
+
+
+    input[type=text], input[type=password], select, textarea {
+        
+        width: 100%;
+        
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+    }
+
+
+
+    .navbar
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        background-color: aqua;
+        padding : .5rem 1rem;
+    }
+
+    form
+    {
+        display: flex;
+        align-items: center;
+        padding: .2rem;
+    }
+
+    a
+    {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    #companiesCard
+    {
+        background-color: rgb(40, 176, 180);
+        padding: 1rem;
+    }
+
+    #adminDashboardCardContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #bookingsCard
+    {
+        background-color: rgb(14, 153, 21);
+        padding: 1rem;
+    }
+
+    #usersCard
+    {
+        background-color: rgb(20, 176, 238);
+        padding: 1rem;
+    }
+
+    #tunnelsCard
+    {
+        background-color: rgb(238, 20, 20);
+        padding: 1rem;
+        
+    }
+
+    .flex-row
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%; 
+    }
+
+    .logoContainer
+    {
+        background-color: royalblue;
+        padding: 1rem;
+        border-radius: 15px;
+        color: azure;
+
+        
+    }
+
+    .logoContainer:hover
+    {
+        background-color: rgb(0, 0, 255);
+    }
+
+    #loggedInFirstName
+    {
+        color: white;
+        filter: drop-shadow(5px 5px 10px #000000);
+    }
+
+    .homeLargeHeading
+    {
+        
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        text-align: center;
+    }
+
+    .homeSmallHeading
+    {
+        font-size: 50px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        text-align: center;
+    }
+
+    .dashboardLargeHeader
+    {
+        font-size: 100px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        margin: 1rem;
+        text-align: center;
+    }
+
+    .managerDashboardContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    
+
+    #homeSplashContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 5rem 2rem;
+        margin: 0
+    }
+    
+    .largeHeader
+    {
+        
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        margin: 1rem;
+        text-align: center;
+    }
+
+    .mediumHeader
+    {
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        margin: 1rem;
+        text-align: center;
+    }
+
+    .flex-column
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    button
+    {
+        appearance: none;
+        border: none;
+        outline: none;
+        background: none;
+
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        background-color: royalblue;
+    }
+
+    .lineExpand
+    {
+        position: relative;
+        background-color: transparent;
+        color: lightslategray;
+        border: 3px solid lightslategray;
+        transition: 0.4s ease-out;
+        overflow: hidden;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .lineExpand span
+    {
+        position: relative;
+        z-index: 2;
+    }
+
+    .lineExpand:after
+    {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: 100%;
+        height: 0px;
+        background-color: lightslategray;
+        border-radius: 0.5rem;
+        background-color: royalblue;
+        opacity: 0;
+        transition: 0.4s ease-out;
+    }
+
+    .lineExpand:hover
+    {
+        color: white;
+        border-color: transparent;
+    }
+
+    .lineExpand:hover:after
+    {
+        height: 150%;
+        opacity: 1;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .button {
+        appearance: none;
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+    
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        background-color: royalblue;
+        color: white;
+        margin-bottom: 2rem;
+    }
+    
+    #one {
+        background-image: linear-gradient(to right, royalblue 50%, darkviolet 50%);
+        background-size: 200%;
+        transition: 0.4s ease-out;
+    }
+    
+    #one:hover {
+        background-position: right;
+    }
+    
+    #two {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #two span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    #two:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: 0;
+        height: 0;
+        background-color: darkviolet;
+        border-radius: 999px;
+        transition: 0.8s ease-out;
+    }
+    
+    #two:hover:after {
+        width: 200%;
+        padding-top: 200%;
+    }
+    
+    #three {
+        position: relative;
+        background-color: transparent;
+        color: lightslategray;
+        border: 3px solid lightslategray;
+        transition: 0.4s ease-out;
+    }
+    
+    #three span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    #three:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: calc(100% + 2rem);
+        height: calc(100% + 2rem);
+        border-radius: 0.5rem;
+        border: 3px solid lightslategray;
+        opacity: 0;
+        transition: 0.4s ease-out;
+    }
+    
+    #three:hover {
+        color: royalblue;
+        border-color: transparent;
+    }
+    
+    #three:hover:after {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        border-color: royalblue;
+    }
+    
+    #four {
+        position: relative;
+        background-color: transparent;
+        color: lightslategray;
+        border: 3px solid lightslategray;
+        transition: 0.4s ease-out;
+    }
+    
+    #four span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    #four:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: calc(100% + 2rem);
+        height: calc(100% + 2rem);
+        border-radius: 0.5rem;
+        border: 3px solid lightslategray;
+        opacity: 0;
+        transition: 0.4s ease-out;
+    }
+    
+    #four:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: 0;
+        height: 0;
+        background-color: royalblue;
+        border-radius: 999px;
+        transition: 0.4s ease-out;
+    }
+    
+    #four:hover {
+        color: white;
+        border-color: transparent;
+    }
+    
+    #four:hover:after {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        border-color: royalblue;
+    }
+    
+    #four:hover:before {
+        width: calc(100% + 5px);
+        height: calc(100% + 5px);
+        border-radius: 0.5rem;
+    }
+
+    #four:active
+    {
+        
+    }
+    
+    #five {
+        position: relative;
+        background-color: transparent;
+        color: lightslategray;
+        border: 3px solid lightslategray;
+        overflow: hidden;
+        transition: 0.4s ease-out;
+    }
+    
+    #five span {
+        position: relative;
+        z-index: 2;
+    }
+    
+    #five:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        width: 100%;
+        height: 0;
+        background-color: royalblue;
+        transition: 0.4s ease-out;
+    }
+    
+    #five:hover {
+        color: white;
+        border-color: transparent;
+    }
+    
+    #five:hover:after {
+        height: 100%;
+    }

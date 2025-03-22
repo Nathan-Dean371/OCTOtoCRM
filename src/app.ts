@@ -90,6 +90,12 @@ app.use('/', bitrixRoutes);
 app.use('/tunnels', tunnelRoutes);
 //#endregion
 
+//Style Test page
+app.get('/style-test', (req: Request, res: Response) => {
+  res.render('style-test', { title: 'Style Test', user: req.user });
+});
+
+
 app.post('/logout', (req: Request, res: Response) => {
   res.clearCookie('auth-token');
   res.redirect('/');
