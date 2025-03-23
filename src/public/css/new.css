@@ -435,7 +435,7 @@
         border: 3px solid lightslategray;
         opacity: 0;
         transition: 0.4s ease-out;
-        cursor:none;
+        
     }
     
     #four:before {
@@ -447,7 +447,7 @@
         z-index: 0;
         width: 0;
         height: 0;
-        background-color: rgb(222, 225, 65);
+        background-color: royalblue;
         border-radius: 999px;
         transition: 0.4s ease-out;
     }
@@ -468,7 +468,7 @@
         height: 100%;
         opacity: 1;
         border-color: royalblue;
-        cursor:none;
+        
     }
     
     #four:hover:before {
