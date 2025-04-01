@@ -1,31 +1,36 @@
+<head>
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+
+
+
 <div class="navbar">
-    <a href="/">
-        <div class="logoContainer">
-            <h1>OCTOtoCRM</h1>
-        </div>
+    <a href="/" class="homeButton">
+        <p>OCTOtoCRM</p>
     </a>
     
-    <% if (!user) { %>
-    
-    <% } else { %>
+    <% if (user) { %>
 
-        <div class="loggedInInfo">
-            
+    
             <% if (user.role === 'admin') { %>
-                <a href="/admin/dashboard"><button><h2>Admin Dashboard</h2></button></a>
+                <div class="headerButton">
+                    <a  href="/admin/dashboard">
+                        <p>Admin Dashboard</p>
+                    </a>
+                </div>
+                
             <% } else if (user.role === 'manager') { %>
-                <a href="/manager/dashboard"><button><h2>Manager Dashboard</h2></button></a>
+                <div class="headerButton">
+                    <a href="/manager/dashboard"><button><h2>Manager Dashboard</h2></button></a>
+                </div>
             <% } %>
             
-        </div>
+ 
 
-        <div>
-            <h1>Logged in as  <span id="loggedInFirstName"><%= user.first_name %></span> </h1>
-        </div>
-
-        <div class="loginNavItem">    
+        <div id="accountInfo">
+            <h1 id="loggedInFirstName"><%= user.first_name %></h1>
             <form action="/logout" method="POST">
-                <button >Logout</button>
+                <button id="logoutButton">Logout</button>
             </form>
         <% } %>
         </div>

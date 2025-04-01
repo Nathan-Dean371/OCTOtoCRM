@@ -1,3 +1,4 @@
+-- Active: 1740059680357@@127.0.0.1@5432@postgres
 @font-face
 {
     font-family: 'HostGrotesk';
@@ -164,16 +165,7 @@
 
 
 
-    .navbar
-    {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        background-color: aqua;
-        padding : .5rem 1rem;
-    }
+    
 
     #managerDashboardCardContainer
     {
@@ -213,13 +205,7 @@
         border-radius: 5px;
     }
 
-    #adminDashboardCardContainer
-    {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-    }
+    
 
     #bookingsCard
     {
@@ -248,27 +234,6 @@
         justify-content: center;
         align-items: center;
         width: 100%; 
-    }
-
-    .logoContainer
-    {
-        background-color: royalblue;
-        padding: 1rem;
-        border-radius: 15px;
-        color: azure;
-
-        
-    }
-
-    .logoContainer:hover
-    {
-        background-color: rgb(0, 0, 255);
-    }
-
-    #loggedInFirstName
-    {
-        color: white;
-        filter: drop-shadow(5px 5px 10px #000000);
     }
 
     .homeLargeHeading
@@ -356,15 +321,8 @@
         outline: none;
         background: none;
         cursor: pointer;
-    
-        font-size: 1.25rem;
-        font-weight: 700;
-        text-transform: uppercase;
-    
-        padding: 1rem 1.5rem;
-        border-radius: 0.5rem;
-        background-color: royalblue;
-        color: white;
+        padding : 0;
+        
         
     }
 
@@ -411,8 +369,7 @@
         outline: none;
         background: none;
 
-        padding: 1rem 1.5rem;
-        border-radius: 0.5rem;
+        
         
     }
 
@@ -422,6 +379,8 @@
 .login-component * {
   box-sizing: border-box;
 }
+
+
 .login-component {
   background: linear-gradient(
     260.11deg,
@@ -429,7 +388,7 @@
     rgba(255, 255, 255, 0.22) 20.499999821186066%,
     rgba(255, 255, 255, 0.16) 100%
   );
-  border-radius: 15px;
+  border-radius: 5px;
   border-style: solid;
   border-color: #000000;
   border-width: 1px;
@@ -525,20 +484,18 @@
   position: relative;
 }
 .email {
-  color: rgba(0, 0, 0, 0.44);
+  color: rgba(0, 0, 0, 0.8);
   text-align: left;
-
   font-size: 20px;
   font-weight: 700;
   position: relative;
-  
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 
 .password {
-  color: rgba(0, 0, 0, 0.44);
+  color: rgba(0, 0, 0, 0.8);
   text-align: left;
 
   font-size: 20px;
@@ -551,8 +508,8 @@
 }
 .button {
   background: #ffffff;
-  border-radius: 10px;
-  padding: 0px 24px 0px 24px;
+  border-radius: 2px;
+  padding: .25rem .75rem;
   display: flex;
   flex-direction: row;
   gap: 0px;
@@ -566,8 +523,23 @@
 
   font-size: 20px;
   font-weight: 700;
-
+  transition: 0.2s ease-out;
 }
+
+.button:hover
+{
+    background : #119DA4;
+    color: #ffffff;
+    transition: 0.42 ease-out;
+}
+
+.button:active
+{
+    background: #0D353D;
+    transition: 0.1s ease-out;
+}
+
+
 .text {
   color: #000000;
   text-align: left;

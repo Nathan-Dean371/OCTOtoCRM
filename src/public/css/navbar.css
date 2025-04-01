@@ -1,0 +1,110 @@
+.navbar
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(
+        260.11deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.22) 20.499999821186066%,
+        rgba(255, 255, 255, 0.16) 100%
+        );
+        backdrop-filter: blur(16px);
+        padding : 0 0;
+        
+    }
+
+
+    .headerButton
+    {
+       
+        color: azure;
+        transition: 0.2s;
+        border-left: #ffffff 1px solid;
+        border-right: #ffffff 1px solid;
+        font-size: xx-large;
+        font-weight: 200;
+        align-self: stretch;
+        align-items: center;
+        display: flex;
+        padding: 0 .5rem;
+    }
+
+    .headerButton:hover
+    {
+        backdrop-filter: invert(80%);
+        text-shadow: 1px 4px 5px #000000;
+        transition: 0.2s;
+        padding: 0 .9rem;
+    }
+
+    .homeButton
+    {
+        font-size: xxx-large;
+        color: azure;
+        transition: 0.2s;
+        padding: 0 .5rem;
+        border-right: #ffffff 1px solid;
+    }
+
+    .homeButton:hover
+    {
+        backdrop-filter: invert(80%);
+        text-shadow: 1px 4px 5px #000000;
+        transition: 0.2s;
+        padding-right: .9rem;
+        
+    }
+
+    #loggedInFirstName
+    {
+        color: white;
+        filter: drop-shadow(5px 5px 10px #000000);
+        border-right: #ffffff 1px solid;
+        padding-right: 0.5rem;
+        align-self: stretch;
+        align-items: center;
+        display: flex;
+    }
+
+    #accountInfo
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+        align-items: center;
+        display: flex;
+
+        form
+        {
+            align-self: stretch;
+            align-items: center;
+            display: flex;
+        }
+    }
+
+    #logoutButton
+    {
+        backdrop-filter: invert(80%);
+        color: azure;
+        transition: 0.2s;
+        align-self: stretch;
+        padding: 0 .5rem;
+
+        font-size: xx-large;
+        color: black;
+    }
+
+    #logoutButton:hover
+    {
+        backdrop-filter: invert(0%);
+        color: azure;
+        text-shadow: 1px 4px 5px #000000;
+        transition: 0.2s;
+        padding: 0 .9rem;
+    }
+
+    
