@@ -9,9 +9,33 @@
         <%- include('navbar'); -%>
     </div>
 
-    <div id="homeSplashContainer">
+   <!--  <div id="homeSplashContainer">
         <h1 class="homeLargeHeading">OCTO to CRM</h1>
         <h2 class="homeSmallHeading">A tool to synch contact & booking data between OCTO standard software and various CRM's.</h2>
+    </div> -->
+
+    <% if (!user) {%>
+    <div id="bodyContainer">
+        <form class="login-component" action="/login" method="POST" autocomplete="off">
+            <div class="frame-7">
+                <h2 class="loginTitle">Login</h2>
+                <div class="frame-8">
+                <div class="frame-3">
+                    <input class="email" type="text" id="email" name="email" placeholder="Email"  required>
+                </div>
+                <div class="frame-3">
+                    <input class="password" type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                </div>
+                <button class="button" type="submit">Login</button>
+            </div>
+        </form>
+    <% } %>
+
+
     </div>
+
+
+    
 </body>
 </html>

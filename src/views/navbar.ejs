@@ -6,40 +6,7 @@
     </a>
     
     <% if (!user) { %>
-    <div class="loginNavItem">    
-        <div class="login-container">
-                    <form action="/login" method="POST">
-
-                        <div class="column">
-                            <div class="row">
-                                <div class="">
-                                    <label for="email" >Email:</label>
-                                </div>
-                                <div class="">
-                                    <input type="text" id="email" name="email"  required>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="">
-                                    <label for="password" >Password:</label>
-                                </div>
-        
-                                <div class="">
-                                    <input type="password" id="password" name="password" required>
-                                </div>
-                                <br>
-                            </div>
-                        </div>
-
-
-                        
-
-                        <div>
-                            <button type="submit">Login</button>
-                        </div>
-                    </form>
-        </div>
+    
     <% } else { %>
 
         <div class="loggedInInfo">
