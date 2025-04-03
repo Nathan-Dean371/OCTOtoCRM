@@ -3,6 +3,7 @@
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
     <div class="">
@@ -11,33 +12,30 @@
 
     <main>  
         <div class="adminDashboardContainer">
-            <h1 class="dashboardLargeHeader">Admin Dashboard</h1>
-            
             <div id="adminDashboardCardContainer">
-                <div class="flex-row" id="row1">
+                
                     <div id="companiesCard" class="card">
                         <h2>Companies</h2>
-    
-                        <a href="invite/company"><button>Invite Company</button></a>
-                        <a href="dashboard/companies"><button>View Companies</button></a>
+                        <div class="buttonContainer">
+                            <a class="cardButton" href="invite/company">Invite Company</a>
+                            <a class="cardButton" href="dashboard/companies">View Companies</a>    
+                        </div>
                     </div>
-    
                     <div id="usersCard" class="card">
                         <h2>Users</h2>
-                        <a href="invite/user"><button>Invite User</button></a>
-                        <a href="dashboard/users"><button>View Users</button></a>
-                        <a href="dashboard/user/invites"><button>View Users invites</button></a>
-                    </div>
+                        <div class="buttonContainer">
+                            <a class="cardButton" href="invite/user">Invite User</a>
+                            <a class="cardButton" href="dashboard/users">View Users</a>
+                            <a class="cardButton" href="dashboard/user/invites">View Users invites</a>
+                        </div>
                 </div>
-                
-                <div class="flex-row" id="row2">
+    
                     <div id="tunnelsCard" class="card">
                         <h2>Tunnels</h2>
     
-                        <a href="dashboard/tunnels"><button>View Tunnels</button></a>
-                        
+                        <a class="cardButton" href="dashboard/tunnels">View Tunnels</a>
                     </div>  
-                </div>
+                
             </div>
         </div>
     </main>

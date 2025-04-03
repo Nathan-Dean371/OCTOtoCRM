@@ -1,4 +1,4 @@
--- Active: 1740059680357@@127.0.0.1@5432@postgres
+
 @font-face
 {
     font-family: 'HostGrotesk';
@@ -8,18 +8,12 @@
     font-display: swap;
 }
 
-
 *
 {
     font-family: 'HostGrotesk', sans-serif;
     font-weight: 400;
     font-style: normal;
 }
-
-
-
-
-
 
 * {
     box-sizing: border-box;
@@ -45,15 +39,7 @@
         justify-content: flex-start;
     }
 
-    .card
-    {
-
-        padding: 1rem;
-        border-radius: 15px;
-        margin: 1rem;
-        box-shadow: 5px 5px 10px #000000;
-        
-    }
+    
 
     
 
@@ -198,34 +184,7 @@
         color: inherit;
     }
 
-    #companiesCard
-    {
-        background-color:whitesmoke;
-        padding: 2rem;
-        border-radius: 5px;
-    }
-
     
-
-    #bookingsCard
-    {
-        background-color: rgb(14, 153, 21);
-        padding: 1rem;
-    }
-
-    #usersCard
-    {
-        background-color: rgb(20, 176, 238);
-        padding: 1rem;
-    }
-
-    #tunnelsCard
-    {
-        background-color: whitesmoke;
-        padding: 2rem;
-        border-radius: 5px;
-        
-    }
 
     .flex-row
     {
