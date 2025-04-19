@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { WebhookEvent } from '../types/ventrata';
 import VentrataWebhookHandler from '../services/ventrata/ventrata-webhook-handler';
+import { FreshsalesConfig } from '../types/tunnel';
 
 const router = Router();
 //const webhookHandler = new VentrataWebhookHandler();
@@ -47,6 +48,15 @@ const router = Router();
         });
         // No return needed here either
     }
+
+    if (tunnelConfig.destinationType === 'freshsales') {
+    const freshsalesConfig = tunnelConfig as FreshsalesConfig;
+    const freshsalesHandler = new FreshsalesWebhookHandler(freshsalesConfig);
+    
+    await freshsalesHandler.handleWebhook(webhookData);
+    return { success: true, message: 'Webhook processed by Freshsales handler' };
+}
+}
 }; */
 
 // Register the route

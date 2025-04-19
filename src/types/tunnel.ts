@@ -48,3 +48,13 @@ export interface Tunnel
     destinationConfig: DestinationConfig
 }
 
+// src/types/tunnel.ts - Add to existing file
+export interface FreshsalesConfig extends DestinationConfig {
+    "destinationType": "freshsales",
+    "api_key": string,
+    "domain": string,  // Your Freshsales domain (without .freshsales.io)
+    "modules": {
+        "contacts": string,     // Usually "contacts"
+        "bookings": string      // Usually "deals"
+    }
+}
