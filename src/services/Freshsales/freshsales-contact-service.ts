@@ -1,17 +1,16 @@
-// src/services/freshsales/freshsales-contact-service.ts
+// src/services/Freshsales/freshsales-contact-service.ts
 import axios from 'axios';
 import { FreshsalesAuthService } from './freshsales-auth';
 import { FreshsalesContact } from '../../types/Freshsales';
 
-
 export class FreshsalesContactService {
     private readonly authService: FreshsalesAuthService;
     
-    constructor(config?: { apiKey: string; domain: string }) {
+    constructor(config?: { apiKey?: string; domain?: string }) {
         this.authService = new FreshsalesAuthService(config);
     }
     
-    async findContactByEmail(email: string): Promise<FreshsalesContact | null> {
+    async findContactByEmail(email: string | null | undefined): Promise<FreshsalesContact | null> {
         if (!email) {
             return null;
         }

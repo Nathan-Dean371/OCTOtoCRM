@@ -6,6 +6,8 @@ import { Tunnel } from '../../types/tunnel';
 import { VentrataAPIError } from '../../utils/errors';
 import  BitrixAuthService  from '../Bitrix/Bitrix-auth';
 import axios from 'axios';
+import { FreshsalesAuthService } from '../Freshsales/freshsales-auth';
+import { FreshsalesConfig } from '../../types/tunnel';
 
 export function CreateTunnel(tunnelData : any)
 {
@@ -33,19 +35,7 @@ export function CreateTunnel(tunnelData : any)
         //destination config
 }
 
-function createDestinationConfig(tunnelData: any) : DestinationConfig{
-    var destinationConfig: DestinationConfig;
-    switch (tunnelData.tunnelDestination) {
-        case "zoho":
-            destinationConfig = createZohoDestination(tunnelData);
-            return destinationConfig;
-        case "bitrix":
-            destinationConfig = CreateBitrixDestination(tunnelData);
-            return destinationConfig;
-        default:
-            throw new Error("Invalid destination");
-    }
-}
+
 
 function CreateBitrixDestination(tunnelData : any) : DestinationConfig
 {
@@ -300,5 +290,58 @@ export async function testVentrataAPIKey(apiKey: string): Promise<boolean> {
         
         // For any other type of error, we'll consider the test as failed
         return false;
+    }
+}
+
+export async function testFreshsalesAPIKey(apiKey: string, domain: string): Promise<boolean> {
+    if (!apiKey || apiKey.trim() === '' || !domain || domain.trim() === '') {
+        return false;
+    }
+    
+    try {
+        // Create a temporary Freshsales service instance with the provided credentials
+        const freshsalesAuth = new FreshsalesAuthService({
+            apiKey,
+            domain
+        });
+        
+        // Test the connection
+        return await freshsalesAuth.testConnection();
+    } catch (error) {
+        console.error('Error testing Freshsales API credentials:', error);
+        return false;
+    }
+}
+
+// Add Freshsales destination config creator
+function createFreshsalesDestination(tunnelData: any): DestinationConfig {
+    const freshsalesConfig: FreshsalesConfig = {
+        destinationType: "freshsales",
+        api_key: tunnelData.freshsales_api_key,
+        domain: tunnelData.freshsales_domain,
+        modules: {
+            contacts: "contacts",
+            bookings: tunnelData.freshsales_module_name || "cm_ventrata_booking"
+        }
+    };
+
+    return freshsalesConfig;
+}
+
+// Update createDestinationConfig to include Freshsales
+function createDestinationConfig(tunnelData: any): DestinationConfig {
+    var destinationConfig: DestinationConfig;
+    switch (tunnelData.tunnelDestination) {
+        case "zoho":
+            destinationConfig = createZohoDestination(tunnelData);
+            return destinationConfig;
+        case "bitrix":
+            destinationConfig = CreateBitrixDestination(tunnelData);
+            return destinationConfig;
+        case "freshsales":
+            destinationConfig = createFreshsalesDestination(tunnelData);
+            return destinationConfig;
+        default:
+            throw new Error("Invalid destination");
     }
 }
