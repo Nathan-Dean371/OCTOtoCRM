@@ -18,8 +18,8 @@ const checkForAuthToken = async (req : Request, res : Response, next : NextFunct
         }
         
         const decode = <jwt.JwtPayload> jwt.verify(req.cookies['auth-token'], process.env.JWT_SECRET as string);
-        //console.log('Decoded token: ', decode);
-        const userFromDb  = await getUserDetails(decode.user);
+        
+        const userFromDb  = await getUserDetails(decode.user.email);
         
         if(userFromDb)
         {

@@ -32,7 +32,6 @@ const tryToLoginUser: RequestHandler = async (req, res, next) => {
         }
 
         // Get user details
-        console.log("Getting user details for email: ", email);
         const userDetails = await getUserDetails(email);
         if (!userDetails) {
             res.status(404).json({
@@ -41,7 +40,7 @@ const tryToLoginUser: RequestHandler = async (req, res, next) => {
             });
             return;
         }
-        console.log("User details: ", userDetails);
+        
         // Create token and set cookie
         const token = createJWTtoken(userDetails);
         res.cookie('auth-token', token, { httpOnly: true });

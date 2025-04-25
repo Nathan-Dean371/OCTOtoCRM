@@ -12,14 +12,14 @@
     <% if (user) { %>
 
     
-            <% if (user.role === 'admin') { %>
+            <% if (user.role === 'ADMIN') { %>
                 <div class="headerButton">
                     <a  href="/admin/dashboard">
                         <p>Admin Dashboard</p>
                     </a>
                 </div>
                 
-            <% } else if (user.role === 'manager') { %>
+            <% } else if (user.role === 'MANAGER') { %>
                 <div class="headerButton">
                     <a href="/manager/dashboard"><button><h2>Manager Dashboard</h2></button></a>
                 </div>

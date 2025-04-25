@@ -29,7 +29,7 @@ export async function getUserDetails(email : string)
 {
     try 
     {
-        console.log('Getting user details for email: ', email);
+        
         const userFromDb  = await prismaClientInstance.users.findFirst({
             where: {
                 email: email
