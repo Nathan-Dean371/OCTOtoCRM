@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const form = event.target;
         const userId = form.getAttribute('data-user-id');
-        const saveButton = form.querySelector('button[type="submit"]');
+        const saveButton = document.querySelector('button[type="submit"]');
         
         if (!saveButton) {
             console.error('Save button not found in form');

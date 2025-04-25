@@ -4,8 +4,9 @@ import { Prisma } from "@prisma/client";
 import prismaClientInstance  from "../services/database/databaseConnector";
 import session from "express-session";
 import { UserToInvite } from "../types/users";
-import { inviteUser } from "../services/Users/inviteUser";
+import { createUserInvitation, sendInvitationEmail } from "../services/Users/inviteUser";
 import { GetCompanyName } from "../services/Companies/Companies";
+import { DevEmailService } from "../services/email/devEmailService";
 
 const router = Router();
 
@@ -34,30 +35,39 @@ const tryInviteUser : RequestHandler = async ( req : Request, res : Response) =>
 
     }
 
-    await prismaClientInstance.$transaction(async (tx) =>
-    {
-        try
-        {
-            let userInvited = await inviteUser(userToInvite, createdByUserID, companyName);
-            console.log("User invited: ", userInvited);
-        } catch (error)
-        {
-            console.log("Redirect to error");
-            res.redirect('/admin/invite/user/error');
-            console.error("Error inviting user: ", error);
+    try {
+        // Step 1: Perform the database operation within a transaction
+        let invitationToken: string | null = null;
+        
+        await prismaClientInstance.$transaction(async (tx) => {
+            // Create the user invitation in the database
+            invitationToken = await createUserInvitation(userToInvite, createdByUserID);
             
-        }
-        if(req.session)
-            {
-                req.session.invitedUser = {
-                    email : req.body.email,
-                    firstName : req.body.firstName,
-                    lastName : req.body.lastName
-                }
+            if (!invitationToken) {
+                throw new Error("Failed to create user invitation");
             }
-        res.redirect('/admin/invite/user/success');
-    });
+        });
 
+        // Step 2: Send the email outside the transaction
+        if (invitationToken) {
+            await sendInvitationEmail(userToInvite, companyName, invitationToken);
+        }
+
+        // Step 3: Update session and redirect
+        if (req.session) {
+            req.session.invitedUser = {
+                email: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+            }
+        }
+        
+        res.redirect('/admin/invite/user/success');
+        
+    } catch (error) {
+        console.error("Error inviting user: ", error);
+        res.redirect('/admin/invite/user/error');
+    }
     
 }
 

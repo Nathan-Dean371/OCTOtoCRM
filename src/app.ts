@@ -6,6 +6,7 @@ import tunnelRoutes from './routes/tunnels.routes';
 import companyRoute from './routes/inviteCompany.routes';
 import inviteUserRoute from './routes/inviteUser.routes';
 import updateCompanyRoute from './routes/updateCompany.route';
+import updateUserRoute from './routes/updateUser.route';
 import createTunnelRoute from './routes/createTunnel.route';
 import bitrixRoutes from './routes/bitrixHandler.routes';
 import { authMiddleware } from './middleware/auth';
@@ -85,6 +86,7 @@ app.use('/', loginRoute);
 app.use('/', companyRoute);
 app.use('/', inviteUserRoute);
 app.use('/', updateCompanyRoute);
+app.use('/', updateUserRoute); // Add this line
 app.use('/', createTunnelRoute);
 app.use('/', bitrixRoutes);
 app.use('/tunnels', tunnelRoutes);

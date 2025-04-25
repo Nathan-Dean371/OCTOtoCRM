@@ -2,55 +2,69 @@ import { Router, RequestHandler } from "express";
 import { checkLoginDetails } from '../utils/userAuth';  
 import { createJWTtoken } from '../utils/JWT-generator';
 import { getUserDetails } from '../services/database/databaseConnector';
+import { user_role } from "../types/userRoles";
 
 
 
 const router = Router();
-
-const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => {
-    const { email, password } = req.body;
-    
-    if (!email || !password) 
-    {
-        res.status(400).json({
-        success: false,
-        message: "Email and password are required",
-    });
-    return;
-    }
-
-    try 
-    {
-        const isValid = await checkLoginDetails({ email, password });
-        if (isValid) 
-        {
-            // Generate a JWT token and send it back to the user
-            const token = createJWTtoken(email);
-            res.cookie('auth-token', token, { httpOnly: true });
-            //Redirect to page depending on user role
-            const userDetails = await getUserDetails(email);
-            if(userDetails?.role === 'admin')
-            {
-                res.redirect('/admin/dashboard');
-            }
-
-
-            // Get role from jwt token  
-            res.redirect('/');
+const tryToLoginUser: RequestHandler = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        
+        
+        // Validate inputs
+        if (!email || !password) {
+            res.status(400).json({
+                success: false,
+                message: "Email and password are required",
+            });
             return;
-        } else {
-            res.status(401).json({
-            success: false,
-            message: "Invalid login details",
-        });
-        return;
         }
-    }  catch (error) {
+
+        // Check login
+        const isValid = await checkLoginDetails({ email, password });
+        if (!isValid) {
+            res.status(401).json({
+                success: false,
+                message: "Invalid login details",
+            });
+            return;
+        }
+
+        // Get user details
+        console.log("Getting user details for email: ", email);
+        const userDetails = await getUserDetails(email);
+        if (!userDetails) {
+            res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+            return;
+        }
+        console.log("User details: ", userDetails);
+        // Create token and set cookie
+        const token = createJWTtoken(userDetails);
+        res.cookie('auth-token', token, { httpOnly: true });
+
+        // Redirect based on role
+        if (userDetails.role === user_role.ADMIN) {
+            res.redirect('/admin/dashboard');
+        } else {
+            res.redirect('/');
+        }
+    } catch (error) {
         console.error("Error during login verification:", error);
-        res.status(500).json({
-        success: false,
-        message: "An error occurred",
-        });
+        
+        // Only send error response if headers haven't been sent
+        if (!res.headersSent) {
+            res.status(500).json({
+                success: false,
+                message: "An error occurred",
+            });
+        } else {
+            // Log the error but don't try to send another response
+            console.error("Headers already sent, cannot send error response");
+        }
     }
 };
 

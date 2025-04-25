@@ -81,7 +81,27 @@ button
         filter: drop-shadow(2px 2px 4px #000000);
 }
 
-#returnToCompaniesButton
+.returnToCompaniesButton
 {
-    margin-bottom: 1rem;
+    backdrop-filter: invert(80%);
+    color: azure;
+    transition:
+    0.2s;
+    align-self: stretch;
+    padding:
+    0 .5rem;
+    font-size: xx-large;
+    color: black;
+
+}
+
+.returnToCompaniesButton:hover
+{
+    backdrop-filter: invert(0%);
+  color: azure;
+  text-shadow: 1px 4px 5px #000000;
+  transition:
+    0.2s;
+    padding:
+    0 .9rem;
 }
