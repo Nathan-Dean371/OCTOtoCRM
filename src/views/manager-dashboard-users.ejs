@@ -25,15 +25,45 @@
             </tr>
 
             <% users.forEach(function(companyUser) { %>
-                <tr>
+                <tr class="displayRow">
                     <td><%= companyUser.first_name %></td>
                     <td><%= companyUser.last_name %></td>
                     <td><%= user.company_name %></td>
                     <td><%= companyUser.email %></td>
                     <td><%= companyUser.role %></td>
                     <td>
-                        <a href="/manager/dashboard/users/<%= user.id %>/edit"><button>Edit</button></a>
+                        <div class="actionButtonsContainer">
+                            <button class="editButton actionButton" data-user-id="<%= companyUser.id %>">Edit</button>
+                        </div>
                     </td>
+                </tr>
+                <tr id="editUserRow-<%= companyUser.id %>" class="editRow" style="display: none;">
+                    <form id="userEditForm-<%= companyUser.id %>" data-user-id="<%= companyUser.id %>">
+                        <td>
+                            <input type="text" class="firstName" name="firstName" value="<%= companyUser.first_name %>" required />
+                        </td>
+                        <td>
+                            <input type="text" class="lastName" name="lastName" value="<%= companyUser.last_name %>" required />
+                        </td>
+                        <td>
+                            <input type="text" class="company" name="company" value="<%= user.company_name %>" readonly />
+                        </td>
+                        <td>
+                            <input type="email" class="email" name="email" value="<%= companyUser.email %>" required />
+                        </td>
+                        <td>
+                            <select name="role" class="role">
+                                <option value="MANAGER" <%= companyUser.role === 'MANAGER' ? 'selected' : '' %>>Manager</option>
+                                <option value="OPERATOR" <%= companyUser.role === 'OPERATOR' ? 'selected' : '' %>>Operator</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="actionButtonsContainer">
+                                <button type="submit" class="saveButton actionButton">Save</button>
+                                <button type="button" class="cancelButton actionButton" data-user-id="<%= companyUser.id %>">Cancel</button>
+                            </div>
+                        </td>
+                    </form>
                 </tr>
             <% }); %>
             

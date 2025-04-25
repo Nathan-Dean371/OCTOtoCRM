@@ -27,21 +27,50 @@
                 
             </tr>
             <% users.forEach(function(user) { %>
-                <tr>
-                    <td><%= user.first_name %></td>
-                    <td><%= user.last_name %></td>
-                    <td><%= user.name%></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.role %></td>
-                    
-                    <td >
+                <tr class="displayRow" data-user-id="<%= user.id %>">
+                    <td class="firstName"><%= user.first_name %></td>
+                    <td class="lastName"><%= user.last_name %></td>
+                    <td class="company"><%= user.name%></td>
+                    <td class="email"><%= user.email %></td>
+                    <td class="role"><%= user.role %></td>
+                    <td>
                         <div class="actionButtonsContainer">
-                            <a class="actionButton" href="/admin/companies/<%= user.id %>/edit"><button >Edit</button></a>
-                            
+                            <button class="editButton actionButton" data-user-id="<%= user.id %>">Edit</button>
                         </div>
                     </td>
                 </tr>
+                <tr id="editUserRow-<%= user.id %>" class="editRow" style="display: none;">
+                    <form id="userEditForm-<%= user.id %>" data-user-id="<%= user.id %>">
+                        <td>
+                            <input type="text" class="firstName" name="firstName" value="<%= user.first_name %>" required />
+                        </td>
+                        <td>
+                            <input type="text" class="lastName" name="lastName" value="<%= user.last_name %>" required />
+                        </td>
+                        <td>
+                            <input type="text" class="company" name="company" value="<%= user.name %>" readonly />
+                        </td>
+                        <td>
+                            <input type="email" class="email" name="email" value="<%= user.email %>" required />
+                        </td>
+                        <td>
+                            <select name="role" class="role">
+                                <option value="ADMIN" <%= user.role === 'ADMIN' ? 'selected' : '' %>>Admin</option>
+                                <option value="MANAGER" <%= user.role === 'MANAGER' ? 'selected' : '' %>>Manager</option>
+                                <option value="OPERATOR" <%= user.role === 'OPERATOR' ? 'selected' : '' %>>Operator</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="actionButtonsContainer">
+                                <button type="submit" class="actionButton" id="saveButton">Save</button>
+                                <button type="button" class="cancelButton actionButton" data-user-id="<%= user.id %>">Cancel</button>
+                            </div>
+                        </td>
+                    </form>
+                </tr>
             <% }); %>
         </table>
+    </div>
 </body>
+<script src="/js/admin/userManagement.js"></script>
 </html>

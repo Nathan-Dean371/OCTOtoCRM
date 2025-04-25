@@ -29,7 +29,7 @@ const tryToLoginUser: RequestHandler = async (req, res, next): Promise<void> => 
             res.cookie('auth-token', token, { httpOnly: true });
             //Redirect to page depending on user role
             const userDetails = await getUserDetails(email);
-            if(userDetails.role === 'admin')
+            if(userDetails?.role === 'admin')
             {
                 res.redirect('/admin/dashboard');
             }
