@@ -9,6 +9,7 @@ import updateCompanyRoute from './routes/updateCompany.route';
 import updateUserRoute from './routes/updateUser.route';
 import createTunnelRoute from './routes/createTunnel.route';
 import bitrixRoutes from './routes/bitrixHandler.routes';
+import acceptInviteRoute from './routes/join.routes';
 import { authMiddleware } from './middleware/auth';
 import prismaClientInstance, { connectToDatabase } from './services/database/databaseConnector';
 import path from 'path';
@@ -89,6 +90,7 @@ app.use('/', updateCompanyRoute);
 app.use('/', updateUserRoute); // Add this line
 app.use('/', createTunnelRoute);
 app.use('/', bitrixRoutes);
+app.use('/', acceptInviteRoute);
 app.use('/tunnels', tunnelRoutes);
 //#endregion
 
@@ -113,6 +115,13 @@ app.get("/", (req: Request, res: Response) => {
   
   const user = req.user as User;
   res.render('index', { title: 'Home' , user : user});
+});
+
+app.get('/invite/declined', (req: Request, res: Response) => {
+  res.render('invite-declined', { 
+      title: 'Invitation Declined',
+      user: req.user 
+  });
 });
 
 export default app;

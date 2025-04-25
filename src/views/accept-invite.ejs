@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Accept Invitation</title>
+        <link rel="stylesheet" href="/css/home.css">
+        <link rel="stylesheet" href="/css/invite.css">
+    </head>
+
+    <body>
+        <div class="">
+            <%- include('navbar'); -%>
+        </div>
+
+        <main>  
+            <h1 class="largeHeader">Accept Invitation</h1>
+
+            <div class="inviteContainer">
+                <div class="inviteDetails glassCard">
+                    <h2>Invitation Details</h2>
+                    <div class="detailsGrid">
+                        
+                        <p><strong>Role:</strong> <%= invitation.role %></p>
+                        <p><strong>Email:</strong> <%= invitation.email %></p>
+                    </div>
+                </div>
+
+                <div class="acceptInviteContainer glassCard">
+                    <h2>Create Your Account</h2>
+                    <form class="inviteForm" action="/invite/accept" method="POST">
+                        <input type="hidden" name="token" value="<%= token %>">
+                        
+                        <div class="formGroup">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" value="<%= invitation.first_name %>" required readonly>
+                        </div>
+
+                        <div class="formGroup">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" value="<%= invitation.last_name %>" required readonly>
+                        </div>
+
+                        <div class="formGroup">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="<%= invitation.email %>" required readonly>
+                        </div>
+
+                        <div class="formGroup">
+                            <label for="password">Create Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+
+                        <div class="formGroup">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+
+                        <div class="buttonGroup">
+                            <button type="submit" class="button">
+                                <span>Accept & Create Account</span>
+                            </button>
+                            <a href="/invite/decline/<%= token %>" class="button cancelButton">
+                                <span>Decline Invitation</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

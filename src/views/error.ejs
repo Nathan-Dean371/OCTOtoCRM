@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/invite.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <main>
+        <div class="inviteContainer">
+            <div class="glassCard">
+                <h2><%= title %></h2>
+                <div class="detailsGrid">
+                    <p><%= message %></p>
+                </div>
+                <div class="buttonGroup">
+                    <a href="/" class="button">
+                        <span>Return Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
