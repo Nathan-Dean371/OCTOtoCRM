@@ -4,32 +4,51 @@
 <head>
     <title>View User Invites</title>
     <link rel="stylesheet" href="/css/tables.css">
+    <link rel="stylesheet" href="/css/invite.css">
 </head>
 <body>
     <div class="">
         <%- include('navbar'); -%>
     </div>
 
-    <h1 class="tableLargeHeader">View User-Invites</h1>
+    <main>
+        <h1 class="largeHeader">View User-Invites</h1>
 
-    <div class="viewUsersContainer">
-        <table class="viewUsersTable">
-            <tr>
-                <th>Company</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Status</th>
-            </tr>
-            <% invites.forEach(function(invite) { %>
-                <tr>
-                    <td><%= companyDictionary.get(invite.company_id) %></td>
-                    <td><%= invite.first_name %></td>
-                    <td><%= invite.last_name %></td>
-                    <td><%= invite.email %></td>
-                    <td><%= invite.status %></td>
-                </tr>
-            <% }); %>
-        </table>
+        <div class="inviteContainer">
+            <div class="glassCard">
+                <div class="inviteDetails">
+                    <h2>User Invitations</h2>
+                    <div class="tableWrapper">
+                        <table class="viewUsersTable">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% invites.forEach(function(invite) { %>
+                                    <tr>
+                                        <td><%= companyDictionary.get(invite.company_id) %></td>
+                                        <td><%= invite.first_name %></td>
+                                        <td><%= invite.last_name %></td>
+                                        <td><%= invite.email %></td>
+                                        <td>
+                                            <span class="status-badge <%= invite.status.toLowerCase() %>">
+                                                <%= invite.status %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

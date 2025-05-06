@@ -27,7 +27,11 @@ document.addEventListener('DOMContentLoaded', function () {
             userData[key] = value;
         });
 
-        fetch(`/admin/users/${userId}`, {
+        // Get the endpoint from the form's data attribute
+        const isManager = form.hasAttribute('data-manager');
+        const endpoint = isManager ? `/manager/users/${userId}` : `/admin/users/${userId}`;
+
+        fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,7 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!messageContainer) {
             messageContainer = document.createElement('div');
             messageContainer.id = 'message-container';
-            document.querySelector('.tableContainer').prepend(messageContainer);
+            // Look for either container class
+            const container = document.querySelector('.tableContainer') || document.querySelector('.viewUsersContainer');
+            container.prepend(messageContainer);
         }
         
         const messageElement = document.createElement('div');

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<%- include('header'); -%>
+<head>
+    <title>Company Tunnels Dashboard</title>
+    <link rel="stylesheet" href="/css/manager-tunnels.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+
+    <main>
+        <h1 class="largeHeader">Company Tunnels Dashboard</h1>
+
+        <div class="tunnelsContainer">
+            <div class="tunnelsHeader">
+                <h2>Your Company's Tunnels</h2>
+                <a href="/manager/dashboard/tunnels/create/new" class="createButton">Create New Tunnel</a>
+            </div>
+
+            <div class="tunnelsTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tunnel Name</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tunnels.forEach(function(tunnel) { %>
+                            <tr>
+                                <td><%= tunnel.name %></td>
+                                <td><%= tunnel.source_type %></td>
+                                <td><%= tunnel.destination_type %></td>
+                                <td><span class="status-badge <%= tunnel.status.toLowerCase() %>"><%= tunnel.status %></span></td>
+                                <td><%= new Date(tunnel.created_at).toLocaleDateString() %></td>
+                                <td>
+                                    <button class="action-btn delete" onclick="deleteTunnel('<%= tunnel.id %>')">Delete</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function deleteTunnel(id) {
+            if (confirm('Are you sure you want to delete this tunnel?')) {
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    const response = await fetch(`/manager/dashboard/tunnels/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': csrfToken
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error deleting tunnel');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error deleting tunnel');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

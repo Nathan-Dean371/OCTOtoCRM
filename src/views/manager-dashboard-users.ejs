@@ -4,7 +4,6 @@
 <head>
     <title>View Users</title>
     <link rel="stylesheet" href="/css/tables.css">
-
 </head>
 <body>
     <div class="">
@@ -14,6 +13,7 @@
     <h1 class="mediumHeader">View Users of: <%= user.company_name %></h1>
 
     <div class="viewUsersContainer">
+        <div id="message-container"></div>
         <table class="viewUsersTable">
             <tr>
                 <th>First Name</th>
@@ -25,12 +25,12 @@
             </tr>
 
             <% users.forEach(function(companyUser) { %>
-                <tr class="displayRow">
-                    <td><%= companyUser.first_name %></td>
-                    <td><%= companyUser.last_name %></td>
-                    <td><%= user.company_name %></td>
-                    <td><%= companyUser.email %></td>
-                    <td><%= companyUser.role %></td>
+                <tr class="displayRow" data-user-id="<%= companyUser.id %>">
+                    <td class="firstName"><%= companyUser.first_name %></td>
+                    <td class="lastName"><%= companyUser.last_name %></td>
+                    <td class="company"><%= user.company_name %></td>
+                    <td class="email"><%= companyUser.email %></td>
+                    <td class="role"><%= companyUser.role %></td>
                     <td>
                         <div class="actionButtonsContainer">
                             <button class="editButton actionButton" data-user-id="<%= companyUser.id %>">Edit</button>
@@ -38,7 +38,7 @@
                     </td>
                 </tr>
                 <tr id="editUserRow-<%= companyUser.id %>" class="editRow" style="display: none;">
-                    <form id="userEditForm-<%= companyUser.id %>" data-user-id="<%= companyUser.id %>">
+                    <form id="userEditForm-<%= companyUser.id %>" data-user-id="<%= companyUser.id %>" data-manager>
                         <td>
                             <input type="text" class="firstName" name="firstName" value="<%= companyUser.first_name %>" required />
                         </td>
@@ -66,7 +66,8 @@
                     </form>
                 </tr>
             <% }); %>
-            
         </table>
+    </div>
 </body>
+<script src="/js/admin/userManagement.js"></script>
 </html>

@@ -3,6 +3,7 @@
 <%- include('header'); -%>
 <head>
     <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/manager.css">
 </head>
 <body>
     <div class="">
@@ -11,26 +12,22 @@
 
     <main>  
         <div class="managerDashboardContainer">
-            <h1 class="dashboardLargeHeader">Manager Dashboard</h1>
-            
             <div id="managerDashboardCardContainer">
-                <div class="flex-row" id="row1">
-                    <div id="companiesCard">
-                        <h2>Company & Users</h2>
-                        <a href="company/manage"><button class="button lineExpand"><span>Manage Company</span></button></a>
-                        <a href="invite/user"><button class="button lineExpand"><span>Invite User</span></button></a>
-                        <a href="dashboard/users"><button class="button lineExpand"><span>View Users</span></button></a>
+                <div id="companiesCard" class="card">
+                    <h2>Company & Users</h2>
+                    <div class="buttonContainer">
+                        <a class="cardButton" href="company/manage">Manage Company</a>
+                        <a class="cardButton" href="invite/user">Invite User</a>
+                        <a class="cardButton" href="dashboard/users">View Users</a>
                     </div>
-                    
                 </div>
                 
-                <div class="flex-row" id="row2">
-                    <div id="tunnelsCard">
-                        <h2>Tunnels</h2>
-    
-                        <a href="dashboard/tunnels"><button class="button lineExpand"><span>View Tunnels</span></button></a>
-                        <a href="dashboard/tunnels/create/new"><button class="button lineExpand"><span>Create Tunnel</span></button></a>
-                    </div>  
+                <div id="tunnelsCard" class="card">
+                    <h2>Tunnels</h2>
+                    <div class="buttonContainer">
+                        <a class="cardButton" href="dashboard/tunnels">View Tunnels</a>
+                        <a class="cardButton" href="dashboard/tunnels/create/new">Create Tunnel</a>
+                    </div>
                 </div>
             </div>
         </div>

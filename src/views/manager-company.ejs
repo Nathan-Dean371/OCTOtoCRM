@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<%- include('header'); -%>
+<head>
+    <title>Manage Company</title>
+    <link rel="stylesheet" href="/css/tables.css">
+</head>
+<body>
+    <div class="">
+        <%- include('navbar'); -%>
+    </div>
+    <h1 class="tableLargeHeader">Manage Company</h1>
+    <div class="tableContainer">
+        <div id="message-container"></div>
+        <table class="viewCompaniesTable">
+            <tr>
+                <th>Company Name</th>
+                <th>Company Website</th>
+                <th>Primary Contact Email</th>
+                <th>Primary Contact Phone No.</th>
+                <th>Actions</th>
+            </tr>
+            <tr id="displayCompanyRow-<%= company.id %>" class="companyRow">
+                <td class="displayCell name"><%= company.name %></td>
+                <td class="displayCell website"><%= company.website %></td>
+                <td class="displayCell primaryContactEmail"><%= company.primary_contact_email %></td>
+                <td class="displayCell primaryContactPhone"><%= company.primary_contact_phone %></td>
+                <td class="displayCell">
+                    <div class="actionButtonsContainer">
+                        <button class="editButton actionButton" data-company-id="<%= company.id %>">Edit</button>
+                    </div>
+                </td>
+            </tr>
+            <tr id="editCompanyRow-<%= company.id %>" class="editRow" style="display: none;">
+                <form id="companytEditForm-<%= company.id %>" data-company-id="<%= company.id %>">
+                    <td><input type="text" class="name" name="name" value="<%= company.name %>" required /></td>
+                    <td><input type="text" class="website" name="website" value="<%= company.website %>" /></td>
+                    <td><input type="email" class="primaryContactEmail" name="primary_contact_email" value="<%= company.primary_contact_email %>" required /></td>
+                    <td><input type="tel" class="primaryContactPhone" name="primary_contact_phone" value="<%= company.primary_contact_phone %>" /></td>
+                    <td>
+                        <div class="actionButtonsContainer">
+                            <button class="cancelButton actionButton" type="button" data-company-id="<%= company.id %>">Cancel</button>
+                            <button type="submit" class="actionButton" id="saveButton">Save</button>
+                        </div>
+                    </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</body>
+<script src="/js/admin/companyManagement.js"></script>
+</html>

@@ -5,6 +5,30 @@
     <title>Create Tunnel</title>
     <link rel="stylesheet" href="/css/tunnel.css">
     <meta name="csrf-token" content="<%= csrfToken %>">
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .development-message {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .development-submessage {
+            font-size: 1rem;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="">
@@ -13,168 +37,13 @@
 
     <h1 class="largeHeader">Create Tunnel</h1>
 
-    <div class="step-indicator">
-        <div class="step step-1 active">1</div>
-        <div class="step step-2">2</div>
-        <div class="step step-3">3</div>
-    </div>
-
-    <div id="step-1-container" class="step-container">
-        <h2 class="mediumHeader">Step 1: Basic Information & Ventrata Setup</h2>
-        
-        <div class="tunnelCreatorContainer">
-            <div id="step1-error-message" class="error-message" style="display: none;"></div>
-            
-            <div class="form-group">
-                <label for="tunnelName">Tunnel Name:</label>
-                <input type="text" id="tunnelName" name="tunnelName" required>
-            </div>
-
-            <div class="form-group">
-                <label for="sourceAPIkey">Ventrata API Key:</label>   
-                <input type="text" id="sourceAPIkey" name="sourceAPIkey" required>
-            </div>
-            
-            <div class="form-help">
-                <p>Your Ventrata API key can be found in your Ventrata account under API settings.</p>
-            </div>
-
-            <button type="button" id="step1-next" class="btn btn-primary">Next Step</button>
+    <div class="glass-panel">
+        <div class="development-message">🚧 Under Development 🚧</div>
+        <div class="development-submessage">
+            This feature is currently being developed and will be available soon.
+            <br>
+            Thank you for your patience!
         </div>
     </div>
-
-    <!-- Step 2: Bitrix24 Configuration -->
-    <div id="step-2-container" class="step-container" style="display: none;">
-        <h2 class="mediumHeader">Step 2: Bitrix24 Configuration</h2>
-        
-        <div class="tunnelCreatorContainer">
-            <div id="step2-error-message" class="error-message" style="display: none;"></div>
-            
-            <div class="instructions">
-                <h3>Setup Instructions:</h3>
-                <ol>
-                    <li>Log in to your Bitrix24 portal</li>
-                    <li>Go to Applications → Developer Resources → Other</li>
-                    <li>Click "Add Integration" or "Add Application"</li>
-                    <li>Enter a name for your application (e.g., "Ventrata Connector")</li>
-                    <li>Add the following as Redirect URI:
-                        <div class="code-block" id="callbackUrl">Loading...</div>
-                    </li>
-                    <li>Set application scope to include:
-                        <ul>
-                            <li>CRM (crm)</li>
-                            <li>REST API (rest_api)</li>
-                        </ul>
-                    </li>
-                    <li>After saving, you'll receive a Client ID and Client Secret</li>
-                </ol>
-            </div>
-
-            <div class="form-group">
-                <label for="portalDomain">Bitrix24 Portal Domain:</label>
-                <input type="text" id="portalDomain" name="portalDomain" required placeholder="your-portal.bitrix24.com">
-            </div>
-            
-            <div class="form-group">
-                <label for="clientId">Client ID:</label>
-                <input type="text" id="clientId" name="clientId" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="clientSecret">Client Secret:</label>
-                <input type="text" id="clientSecret" name="clientSecret" required>
-            </div>
-            
-            <div class="form-help">
-                <p>After submitting this form, you'll be redirected to Bitrix24 to authorize the connection.</p>
-            </div>
-
-            <div class="button-group">
-                <button type="button" id="step2-back" class="btn btn-secondary">Back</button>
-                <button type="button" id="step2-next" class="btn btn-primary">Connect to Bitrix24</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Step 3: Success -->
-    <div id="step-3-container" class="step-container" style="display: none;">
-        <h2 class="mediumHeader">Tunnel Created Successfully!</h2>
-        
-        <div class="successContainer">
-            <div class="success-icon">✓</div>
-            
-            <div class="tunnel-details">
-                <h3>Tunnel Details:</h3>
-                <ul>
-                    <li><strong>Name:</strong> <span id="success-tunnel-name"></span></li>
-                    <li><strong>Source:</strong> Ventrata</li>
-                    <li><strong>Destination:</strong> Bitrix24</li>
-                    <li><strong>Status:</strong> <span id="success-tunnel-status"></span></li>
-                    <li><strong>Created:</strong> <span id="success-tunnel-created"></span></li>
-                </ul>
-            </div>
-            
-            <div class="next-steps">
-                <h3>Next Steps:</h3>
-                <p>Your tunnel is now active and will automatically sync bookings from Ventrata to Bitrix24.</p>
-                <ol>
-                    <li>Create a test booking in Ventrata</li>
-                    <li>Check your Bitrix24 CRM for the new contact and booking</li>
-                    <li>Monitor tunnel status in the dashboard</li>
-                </ol>
-            </div>
-            
-            <div class="button-container">
-                <a href="/manager/dashboard/tunnels" class="btn">View All Tunnels</a>
-                <a href="/manager/dashboard" class="btn">Return to Dashboard</a>
-            </div>
-        </div>
-    </div>
-
 </body>
-
-<script src="/js/createTunnel.js"></script>
-<script>
-    /* const select = document.querySelector('select');
-    const ventrataInputs = document.querySelector('.ventrataInputs');
-    console.log(select);
-
-    select.addEventListener('change', (e) => 
-    {
-        console.log(e.target.value);
-        if (e.target.value == 'ventrata') {
-            ventrataInputs.style.display = 'block';
-        } else {
-            ventrataInputs.style.display = 'none';
-        }
-    }); 
-
-    const testSourceButton = document.getElementById('testSource');
-    const ventrataValues = document.getElementById('ventrataValues');
-    const inputsContainer = document.getElementById('inputsContainer');
-    testSourceButton.addEventListener('click', async (e) => {
-        const ventrataApiKey = document.getElementById('ventrataApiKey');
-        fetch('https://api.ventrata.com/octo/suppliers', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${ventrataApiKey.value}`,
-                    'Content-Type': 'application/json',
-                    'Octo-Capabilities': '', 
-                }
-            }).then(respone => respone.json()).then(data =>  {
-                console.log(data);
-                //If response status is an object
-                if (data.error) 
-                {   
-                    displayMessage('error', data.errorMessage);
-                    HandleTestResult(false);
-                } else {
-                    displayMessage('success', 'Connection successful');
-                    HandleTestResult(true);
-                }
-            })
-
-    }); */
-</script>
-
 </html>

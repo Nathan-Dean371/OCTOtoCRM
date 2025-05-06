@@ -7,6 +7,7 @@ import { UserToInvite } from "../types/users";
 import { createUserInvitation, sendInvitationEmail } from "../services/Users/inviteUser";
 import { GetCompanyName } from "../services/Companies/Companies";
 import { DevEmailService } from "../services/email/devEmailService";
+import { user_role } from "../types/userRoles";
 
 const router = Router();
 
@@ -71,5 +72,48 @@ const tryInviteUser : RequestHandler = async ( req : Request, res : Response) =>
     
 }
 
+const tryManagerInviteUser : RequestHandler = async (req: Request, res: Response) => {
+    if(!req.user) {
+        console.error("User not logged in");
+        res.redirect('/manager/invite/user/error');
+        return;
+    }
+
+    // Force role to OPERATOR for manager invites
+    req.body.role = 'OPERATOR';
+    const createdByUserID = req.user.id as string;
+
+    let companyName = await GetCompanyName(req.user.company_id);
+    let userToInvite : UserToInvite = {
+        email: req.body.email,
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
+        company_id: req.user.company_id, // Use manager's company
+        role: user_role.OPERATOR // Force role to OPERATOR for manager invites
+    }
+
+    try {
+        let invitationToken = await createUserInvitation(userToInvite, createdByUserID);
+        if (invitationToken) {
+            await sendInvitationEmail(userToInvite, companyName, invitationToken);
+        }
+
+        if (req.session) {
+            req.session.invitedUser = {
+                email: req.body.email,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+            }
+        }
+        
+        res.redirect('/manager/invite/user/success');
+        
+    } catch (error) {
+        console.error("Error inviting user:", error);
+        res.redirect('/manager/invite/user/error');
+    }
+}
+
 router.post('/admin/invite/user', tryInviteUser);
+router.post('/manager/invite/user', tryManagerInviteUser);
 export default router;

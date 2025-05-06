@@ -11,22 +11,15 @@
     </div>
 
     <div>
-        <h1 class="largeHeader">Invite User</h1>
+        <h1 class="largeHeader">Invite User to <%= user.company_name %></h1>
     </div>
 
     <div class="inviteContainer">
         <div class="glassCard">
             <div class="acceptInviteContainer">
                 <h2>Invite New User</h2>
-                <form class="inviteForm" action="/admin/invite/user" method="post">
-                    <div class="formGroup">
-                        <label for="companyId">Company</label>
-                        <select name="companyId" id="companyId">
-                            <% companyDictionary.forEach(function(companyName, companyId){ %>
-                                <option value="<%= companyId %>"><%= companyName %></option>
-                            <% }); %>
-                        </select>
-                    </div>
+                <form class="inviteForm" action="/manager/invite/user" method="post">
+                    <input type="hidden" name="companyId" value="<%= user.company_id %>">
 
                     <div class="formGroup">
                         <label for="firstName">First Name</label>
@@ -46,7 +39,6 @@
                     <div class="formGroup">
                         <label for="role">Role</label>
                         <select name="role" id="role">
-                            <option value="MANAGER">Manager</option>
                             <option value="OPERATOR">Operator</option>
                         </select>
                     </div>
@@ -55,9 +47,10 @@
                         <button type="submit" class="button">
                             <span>Send Invitation</span>
                         </button>
-                        <a href="/admin/dashboard" class="button cancelButton">
+                        <a href="/manager/dashboard" class="button cancelButton">
                             <span>Cancel</span>
                         </a>
+                        
                     </div>
                 </form>
             </div>

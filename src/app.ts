@@ -21,6 +21,8 @@ import crypto from 'crypto';
 import session from 'express-session';
 import { User } from './types/users';
 import { create } from 'domain';
+import managerRoutes from './routes/manager.routes';
+import managerTunnelsRouter from './routes/managerTunnels.routes';
 
 declare module "express-session"
 {
@@ -91,6 +93,7 @@ app.use('/', updateUserRoute); // Add this line
 app.use('/', createTunnelRoute);
 app.use('/', bitrixRoutes);
 app.use('/', acceptInviteRoute);
+
 app.use('/tunnels', tunnelRoutes);
 //#endregion
 
@@ -268,10 +271,48 @@ function AddAdminRoutes(app: express.Express)
 
     res.render('admin-users', { title: 'Admin Users', user: req.user, users, showReturnToCompanies : true});
   });
+
+  app.get('/admin/dashboard/tunnels', async (req: Request, res: Response) => {
+    try {
+        const tunnels = await prismaClientInstance.tunnels.findMany({
+            include: {
+                companies: true
+            }
+        });
+        
+        res.render('admin-tunnels', { 
+            title: 'Admin Tunnels Dashboard', 
+            user: req.user, 
+            tunnels 
+        });
+    } catch (error) {
+        console.error('Error fetching tunnels:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            message: 'Error loading tunnels',
+            user: req.user
+        });
+    }
+});
+
+app.delete('/admin/dashboard/tunnels/:id', async (req: Request, res: Response) => {
+    try {
+        await prismaClientInstance.tunnels.delete({
+            where: { id: req.params.id }
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Error deleting tunnel:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error deleting tunnel' 
+        });
+    }
+});
   //#endregion
 }
 
-function AddManagerRoutes(app : express.Express)
+function AddManagerRoutes(app: express.Express)
 {
   //#region Manager routes
   app.get('/manager/dashboard', (req: Request, res: Response) => {
@@ -291,6 +332,36 @@ function AddManagerRoutes(app : express.Express)
 
   });
 
+  app.get('/manager/company/manage', async (req: Request, res: Response) => {
+    try {
+      const user = req.user as User;
+      const company = await prismaClientInstance.companies.findUnique({
+        where: { id: user.company_id }
+      });
+
+      if (!company) {
+        return res.status(404).render('error', {
+          title: 'Error',
+          message: 'Company not found',
+          user: req.user
+        });
+      }
+
+      res.render('manager-company', {
+        title: 'Manage Company',
+        company,
+        user: req.user
+      });
+    } catch (error) {
+      console.error('Error loading company management:', error);
+      res.status(500).render('error', {
+        title: 'Error',
+        message: 'An error occurred while loading company details',
+        user: req.user
+      });
+    }
+  });
+
   app.get('/manager/dashboard/tunnels/create/new', async (req: Request, res: Response) => {
     
     //Generate a new tunnel ID
@@ -303,6 +374,55 @@ function AddManagerRoutes(app : express.Express)
     
 
   });
+
+  app.get('/manager/invite/user', async (req: Request, res: Response) => {
+    const user = req.user as User;
+    // We only need the company name of the manager's company
+    const companyDictionary = new Map<string, string>([[user.company_id, user.company_name]]);
+    res.render('manager-invite-user', { 
+      title: 'Invite User', 
+      user: req.user, 
+      companyDictionary 
+    });
+  });
+
+  app.get('/manager/dashboard/tunnels', async (req: Request, res: Response) => {
+    try {
+        if (!req.user) {
+          return res.status(401).render('error', {
+            title: 'Error',
+            message: 'Unauthorized access',
+            user: null
+          });
+        }
+
+        const tunnels = await prismaClientInstance.tunnels.findMany({
+            where: {
+                company_id: req.user.company_id
+            },
+            orderBy: {
+                created_at: 'desc'
+            }
+        });
+        
+        res.render('manager-tunnels', { 
+            title: 'Company Tunnels Dashboard', 
+            user: req.user, 
+            tunnels 
+        });
+    } catch (error) {
+        console.error('Error fetching tunnels:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            message: 'Error loading tunnels',
+            user: req.user
+        });
+    }
+});
+
+  // Use the manager tunnels router
+  app.use('/manager/dashboard/tunnels', managerTunnelsRouter);
+
   //#endregion
 }
 //#endregion

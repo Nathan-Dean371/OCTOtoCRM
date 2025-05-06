@@ -153,28 +153,7 @@
 
     
 
-    #managerDashboardCardContainer
-    {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        gap: 1rem;
-        background-color:transparent;
-        padding: 1rem;
-        border-radius: 5px;
-        width: 100%;
-    }
-
-    .managerDashboardContainer
-    {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem;
-        background-color: khaki;
-    }
+   
 
     
 

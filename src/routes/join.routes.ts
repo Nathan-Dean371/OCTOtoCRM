@@ -108,6 +108,54 @@ const declineInvitation: RequestHandler = async (req: Request, res: Response) =>
     }
 };
 
+const joinPage: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const token = req.query.token as string;
+
+        if (!token) {
+            return res.status(400).render('error', {
+                title: 'Invalid Token',
+                message: 'No invitation token provided',
+                user: req.user
+            });
+        }
+
+        const invitation = await prismaClientInstance.user_invitations.findFirst({
+            where: {
+                invitation_token: token,
+                status: invitation_status.PENDING,
+                expires_at: {
+                    gt: new Date()
+                }
+            }
+        });
+
+        if (!invitation) {
+            return res.status(400).render('error', {
+                title: 'Invalid Invitation',
+                message: 'Invitation not found or has expired',
+                user: req.user
+            });
+        }
+
+        res.render('invitation', {
+            title: 'Accept Invitation',
+            invitation,
+            token,
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Error loading invitation page:', error);
+        res.status(500).render('error', {
+            title: 'Error',
+            message: 'An error occurred while loading the invitation',
+            user: req.user
+        });
+    }
+};
+
+
+router.get('/join', joinPage);
 router.post('/invite/accept', acceptInvitation);
 router.get('/invite/decline/:token', declineInvitation);
 
